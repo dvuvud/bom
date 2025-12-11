@@ -19,7 +19,7 @@ Alla funktioner och datastrukturer som deklareras i `.h`-filer ska dokumenteras 
 
 Exempelmall att följa:
 
-```cpp
+```
 /**
  * @brief Kort sammanfattning av vad funktionen/datastrukturen gör
  * 
