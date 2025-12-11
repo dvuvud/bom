@@ -53,3 +53,6 @@ dkms.conf
 
 # Don't need to upload doxygen docs to remote
 docs/html
+
+# MacOS things
+*.DS_Store
