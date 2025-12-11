@@ -84,7 +84,7 @@ obj *allocate(size_t bytes, function1_t destructor);
 obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor);
 
 /**
- * @brief Frees and object immediately, if the reference counter is 0
+ * @brief Frees an object immediately, if the reference counter is 0
  *
  * The objects destructor is called before the memory is freed.
  *
