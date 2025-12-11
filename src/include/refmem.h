@@ -6,6 +6,11 @@
  * @brief Generic pointer to the allocated object
  *
  * This type is used to hide the objects internal metadata from the user
+ * 
+ * @note Because the reference counter is 8-bit, each object can hold at most
+ * 255 active references. Overflowing this limit results in undefined
+ * behavior.
+
  */
 typedef void obj;
 
@@ -24,6 +29,10 @@ typedef void (*function1_t)(obj *);
  * @param p Pointer to the object whose reference counter should be incremented
  *
  * @note If `p` is `NULL`, the call is silently ignored.
+ *
+ * @warning The reference counter is 8-bit (0–255). 
+ * Trying to increment beyond 255 results in overflow and undefined behavior.
+ *
  * @example
  * struct cell *c = allocate(sizeof(struct cell), cell_destructor);
  * retain(c); // rc(c) increments to 1
