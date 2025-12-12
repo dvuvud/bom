@@ -33,9 +33,11 @@ typedef void (*function1_t)(obj *);
  * @warning The reference counter is 8-bit (0–255). 
  * Trying to increment beyond 255 results in overflow and undefined behavior.
  *
- * @example
+ * @par Example:
+ * @code
  * struct cell *c = allocate(sizeof(struct cell), cell_destructor);
  * retain(c); // rc(c) increments to 1
+ * @endcode
  */
 void retain(obj *p);
 
@@ -47,9 +49,11 @@ void retain(obj *p);
  * @param p Pointer to the object whose reference counter should be decremented
  *
  * @note If `p` is `NULL`, the call is silently ignored.
- * @example
+ * @par Example:
+ * @code
  * struct cell *c = ...; // rc(c) = 1
  * release(c); // rc(c) is 0, the object gets prepared for destruction.
+ * @endcode
  */
 void release(obj *p);
 
@@ -72,8 +76,10 @@ size_t rc(obj *p);
  *
  * @note The call the trigger collection of garbage up to the cascade limit.
  * @warning Internal memory leaks can occur if destruction is not handled correctly.
- * @example
+ * @par Example:
+ * @code
  * struct cell *c = (struct cell*) allocate(sizeof(struct cell), cell_destructor);
+ * @endcode
  */
 obj *allocate(size_t bytes, function1_t destructor);
 
@@ -86,9 +92,11 @@ obj *allocate(size_t bytes, function1_t destructor);
  * @return obj* Pointer to the allocated memory.
  *
  * @note Similar to `calloc`, memory is null instantiated.
- * @example
+ * @par Example:
+ * @code
  * // Allocates an array of 10 int pointers with a default destructor
  * obj **arr = (obj**) allocate_array(10, sizeof(obj*), NULL);
+ * @endcode
  */
 obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor);
 
