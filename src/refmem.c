@@ -1,4 +1,5 @@
-#include <refmem.h>
+#include "refmem.h"
+#include <stdint.h>
 
 // Memory layout - [metadata][user object]
 typedef struct metadata {
