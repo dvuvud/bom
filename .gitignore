@@ -61,3 +61,6 @@ docs/html
 docs/coverage*
 bin/*
 obj/*
+
+# Don't ignore
+!obj/.keep
