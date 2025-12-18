@@ -10,14 +10,14 @@ OBJDIR  = obj
 BINDIR  = bin
 
 # ----------------- Filer -----------------
-LIB_SRC  = $(SRCDIR)/refmem.c
-LIB_OBJ  = $(OBJDIR)/refmem.o
+LIB_SRCS = $(wildcard $(SRCDIR)/*.c)
+LIB_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(LIB_SRCS))
 
-TEST_SRC = $(TESTDIR)/test_allocate_array.c
-TEST_BIN = $(BINDIR)/unittests
+TEST_SRCS = $(wildcard $(TESTDIR)/*.c)
+TEST_BIN  = $(BINDIR)/unittests
 
 # -------------- Standardmål ---------------
-all:
+all: $(LIB_OBJS)
 
 # --------- Bygg bibliotekets .o -----------
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -25,9 +25,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ------------ Bygg testprogram -------------
-$(TEST_BIN): $(LIB_OBJ) $(TEST_SRC)
+$(TEST_BIN): $(LIB_OBJS) $(TEST_SRCS)
 	@mkdir -p $(BINDIR)
-	$(CC) $(CFLAGS) $^ $(CUNIT) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $^ $(CUNIT) -o $@
 
 # --------------- Kör tester -----------------
 test: $(TEST_BIN)
