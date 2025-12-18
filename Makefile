@@ -44,4 +44,4 @@ generate_coverage: clean
 
 # ----------------- Städning -----------------
 clean:
-	rm -rf $(OBJDIR)/refmem.o $(OBJDIR)/*.gcno $(OBJDIR)/*.gcda $(BINDIR) $(COVDIR)
+	rm -rf $(OBJDIR)/*.o $(OBJDIR)/*.gcno $(OBJDIR)/*.gcda $(BINDIR) $(COVDIR)

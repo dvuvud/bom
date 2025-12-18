@@ -63,4 +63,5 @@ bin/*
 obj/*
 
 # Don't ignore
-!obj/.keep
+!*.keep
+!*.gitkeep
