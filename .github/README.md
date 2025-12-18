@@ -22,7 +22,7 @@ This will generate the documentation in the `docs/html` folder. You can open the
 git clone --recursive https://github.com/IOOPM-UU/bom.git
 cd bom
 
-# Build and run
+# Build library
 make
 ```
 
@@ -38,7 +38,6 @@ make memtest
 ```
 
 ## Generate coverage reports
-
 
 #### Using Makefile
 ```bash
