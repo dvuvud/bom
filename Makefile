@@ -39,7 +39,7 @@ test: $(TEST_BIN)
 generate_coverage: clean
 	$(MAKE) test EXTRA_CFLAGS="$(COVERAGE_FLAGS)"
 	@mkdir -p $(COVDIR)
-	gcov -b -o $(OBJDIR) $(LIB_SRC)
+	gcov -b -o $(OBJDIR) $(LIB_SRCS)
 	mv *.gcov $(COVDIR)
 
 # ----------------- Städning -----------------
