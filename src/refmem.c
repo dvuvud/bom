@@ -13,12 +13,14 @@ typedef struct metadata {
 } metadata_t;
 
 // Helper function to get metadata from user object
-static inline metadata_t *meta_from_obj(obj *p) {
+static inline metadata_t *meta_from_obj(obj *p) 
+{
 	return ((metadata_t *)p) - 1;
 }
 
 // Helper function to get user obj from metadata
-static inline obj *obj_from_meta(metadata_t *m) {
+static inline obj *obj_from_meta(metadata_t *m) 
+{
 	return (obj *)(m + 1);
 }
 
