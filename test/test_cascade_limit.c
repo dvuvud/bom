@@ -26,7 +26,7 @@ void register_cascade_limit_tests()
 {
 	CU_pSuite suite = CU_add_suite("Cascade_Limit_Tests", NULL, NULL);
 	if (suite != NULL) 
-    {
+	{
 		CU_add_test(suite, "test set and get cascade limit", test_set_get_cascade_limit);
 		CU_add_test(suite, "test large cascade limit value", test_cascade_limit_large_value);
 	}
