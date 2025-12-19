@@ -12,14 +12,14 @@ BINDIR  = bin
 COVDIR = docs/coverage
 
 # ----------------- Filer -----------------
-LIB_SRC  = $(SRCDIR)/refmem.c
-LIB_OBJ  = $(OBJDIR)/refmem.o
+LIB_SRCS = $(wildcard $(SRCDIR)/*.c)
+LIB_OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(LIB_SRCS))
 
-TEST_SRC = $(TESTDIR)/test_allocate_array.c
-TEST_BIN = $(BINDIR)/unittests
+TEST_SRCS = $(wildcard $(TESTDIR)/*.c)
+TEST_BIN  = $(BINDIR)/unittests
 
 # -------------- Standardmål ---------------
-all:
+all: $(LIB_OBJS)
 
 # --------- Bygg bibliotekets .o -----------
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -27,7 +27,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -c $< -o $@
 
 # ------------ Bygg testprogram -------------
-$(TEST_BIN): $(LIB_OBJ) $(TEST_SRC)
+$(TEST_BIN): $(LIB_OBJS) $(TEST_SRCS)
 	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $^ $(CUNIT) $(LDFLAGS) -o $@
 
@@ -39,7 +39,7 @@ test: $(TEST_BIN)
 generate_coverage: clean
 	$(MAKE) test EXTRA_CFLAGS="$(COVERAGE_FLAGS)"
 	@mkdir -p $(COVDIR)
-	gcov -b -o $(OBJDIR) $(LIB_SRC)
+	gcov -b -o $(OBJDIR) $(LIB_SRCS)
 	mv *.gcov $(COVDIR)
 
 # ----------------- Städning -----------------

@@ -53,17 +53,13 @@ void test_allocate_array_ptr_obj(){
 	// FRIGÖRING
 }
 
-int main()
+void register_array_allocation_tests()
 {
-	CU_initialize_registry();
 	CU_pSuite suite = CU_add_suite("Allocate_array", 0, 0);
-	CU_add_test(suite, "test allocate_array",                       test_allocate_array_basic);
-	CU_add_test(suite, "test allocate_array with 0 elements",       test_allocate_array_zero);
+	CU_add_test(suite, "test allocate_array", test_allocate_array_basic);
+	CU_add_test(suite, "test allocate_array with 0 elements", test_allocate_array_zero);
 	CU_add_test(suite, "test allocate_array with initialized to 0", test_allocate_array_zero_init);
-	CU_add_test(suite, "test allocate_array with array of char *",  test_allocate_array_ptr);
-	CU_add_test(suite, "test allocate_array with array of obj *",  test_allocate_array_ptr_obj);
+	CU_add_test(suite, "test allocate_array with array of char *", test_allocate_array_ptr);
+	CU_add_test(suite, "test allocate_array with array of obj *", test_allocate_array_ptr_obj);
 
-	CU_basic_run_tests();
-	CU_cleanup_registry();
-	return 0;
 }
