@@ -7,9 +7,12 @@ struct queue_node {
 };
 
 // Push an object to the end of the queue
-int queue_push(queue_t *q, void *data) {
+int queue_push(queue_t *q, void *data)
+{
 	queue_node_t *new_node = malloc(sizeof(queue_node_t));
-	if (!new_node) return -1;
+	if (!new_node) {
+		return -1;
+	}
 
 	new_node->data = data;
 	new_node->next = NULL;
@@ -25,8 +28,11 @@ int queue_push(queue_t *q, void *data) {
 }
 
 // Dequeue the first object in the queue
-void *queue_pop(queue_t *q) {
-	if (q->head == NULL) return NULL;
+void *queue_pop(queue_t *q)
+{
+	if (q->head == NULL) {
+		return NULL;
+	}
 
 	queue_node_t *temp = q->head;
 	void *data = temp->data;
@@ -44,7 +50,8 @@ void *queue_pop(queue_t *q) {
 }
 
 // Clear the entire queue (used in `cleanup()`)
-void queue_clear(queue_t *q) {
+void queue_clear(queue_t *q)
+{
 	while (q->head != NULL) {
 		queue_pop(q);
 	}
