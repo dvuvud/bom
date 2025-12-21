@@ -6,15 +6,15 @@ void register_queue_tests();
 void register_cascade_limit_tests();
 
 int main() {
-	CU_initialize_registry();
+    CU_initialize_registry();
 
-	// Register each file's suite
-	register_array_allocation_tests();
-	register_queue_tests();
-	register_cascade_limit_tests(); 
+    // Register each file's suite
+    register_array_allocation_tests();
+    register_queue_tests();
+    register_cascade_limit_tests(); 
 
-	CU_basic_run_tests();
+    CU_basic_run_tests();
 
-	CU_cleanup_registry();
-	return 0;
+    CU_cleanup_registry();
+    return 0;
 }
