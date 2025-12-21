@@ -28,6 +28,71 @@ static inline obj *obj_from_meta(metadata_t *m)
 	return (obj *)(m + 1);
 }
 
+size_t rc(obj *p)
+{
+    // If pointer is NULL, refcount is 0
+    if (p == NULL) {
+        return 0;
+    }
+
+    // Get metadata from object pointer
+    metadata_t *meta = meta_from_obj(p);
+
+    // Return refcount
+    return meta->refcount;
+}
+
+void free_object(obj *p)
+{
+	if (p == NULL) {
+		return;
+	}
+	// get metadata
+	metadata_t *meta = meta_from_obj(p);
+
+	// call destructor if it exists
+	if (meta->destructor != NULL) {
+		meta->destructor(p);
+	}
+
+	// free metadata
+	free(meta);
+}
+
+void release(obj *p)
+{
+    if (p == NULL) {
+        return;
+    }
+
+    // get metadata from object pointer
+    metadata_t *meta = meta_from_obj(p);
+
+    // if refcount is 0, do nothing
+    if (meta->refcount == 0) {
+        return;
+    }
+
+    // decrease refcount
+    meta->refcount--;
+
+    // if there are still refs, stop
+    if (meta->refcount > 0) {
+        return;
+    }
+
+    // object is garbage, add it to the queue
+    queue_push(&pending_frees, p);
+
+    // free objects
+    size_t i = 0;
+    while (pending_frees.count > 0 && i < cascade_limit) {
+        obj *garbage = queue_pop(&pending_frees);
+        free_object(garbage);
+        i++;
+    }
+}
+
 // Allocates and null-initializes an array with `elememts` number of elements of `elem_size` size
 obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
 {
