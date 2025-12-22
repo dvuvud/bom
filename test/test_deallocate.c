@@ -2,7 +2,6 @@
 #include "include/refmem.h"
 
 
-
 static int destructor_calls = 0;
 
 //destructor for test(counts use)
@@ -13,12 +12,14 @@ void test_destructor(obj *p)
 }
 
 
-void test_deallocate_null(){
+void test_deallocate_null()
+{
     deallocate(NULL);
     CU_ASSERT_TRUE(1); //nothing happens
 }
 
-void test_deallocate_calls_destructor(){
+void test_deallocate_calls_destructor()
+{
     destructor_calls = 0;
 
     obj *p = allocate(sizeof(int), test_destructor);
