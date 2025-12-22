@@ -7,6 +7,7 @@ static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
 //static size_t cascade_counter = 0;   // Den läggs till senare när hela cascade-logiken kopplas ihop.
+static size_t refcount_max = 255;
 
 
 // Memory layout - [metadata][user object]
@@ -57,6 +58,22 @@ void free_object(obj *p)
 
     // free metadata
     free(meta);
+}
+
+void retain(obj *p)
+{
+    if (p == NULL) {
+        return;
+    }
+    
+    // get metadata from object pointer
+    metadata_t *meta = meta_from_obj(p);
+    
+    if (meta->refcount == refcount_max) {
+        // error!
+        return;
+    }
+    meta->refcount++;
 }
 
 void release(obj *p)
