@@ -4,6 +4,7 @@
 void register_array_allocation_tests();
 void register_queue_tests();
 void register_cascade_limit_tests();
+void register_deallocate_tests();
 
 int main() {
 	CU_initialize_registry();
@@ -12,6 +13,7 @@ int main() {
 	register_array_allocation_tests();
 	register_queue_tests();
 	register_cascade_limit_tests(); 
+	register_deallocate_tests();
 
 	CU_basic_run_tests();
 

@@ -128,3 +128,22 @@ size_t get_cascade_limit(void)
 {
 	return cascade_limit;
 }
+
+
+void deallocate(obj *p){
+    metadata_t *meta;
+
+    if (p == NULL){
+        return;
+    }
+
+    meta = meta_from_obj(p);
+
+    if (meta->destructor != 0){
+        return;
+    }
+    if (meta->destructor != NULL){
+        meta->destructor(p);
+    }
+    free(meta);
+}
