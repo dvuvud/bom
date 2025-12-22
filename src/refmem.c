@@ -93,6 +93,22 @@ void release(obj *p)
     }
 }
 
+obj *allocate(size_t bytes, function1_t destructor)
+{
+	metadata_t *metadata;
+
+	metadata = malloc(sizeof(metadata_t) + bytes);
+	if (metadata == NULL) {
+		return NULL;
+	}
+	
+	metadata->refcount = 0;
+	metadata->size = bytes;
+	metadata->destructor = destructor;
+
+	return obj_from_meta(metadata);
+}
+
 // Allocates and null-initializes an array with `elememts` number of elements of `elem_size` size
 obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
 {
