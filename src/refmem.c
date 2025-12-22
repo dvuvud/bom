@@ -1,5 +1,6 @@
 #include "include/refmem.h"
 #include "include/queue.h"
+#include "all_objects_list.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -17,13 +18,13 @@ typedef struct metadata {
 } metadata_t;
 
 // Helper function to get metadata from user object
-static inline metadata_t *meta_from_obj(obj *p) 
+static inline metadata_t *meta_from_obj(obj *p)
 {
 	return ((metadata_t *)p) - 1;
 }
 
 // Helper function to get user obj from metadata
-static inline obj *obj_from_meta(metadata_t *m) 
+static inline obj *obj_from_meta(metadata_t *m)
 {
 	return (obj *)(m + 1);
 }
@@ -127,4 +128,20 @@ void set_cascade_limit(size_t limit)
 size_t get_cascade_limit(void)
 {
 	return cascade_limit;
+}
+
+void cleanup()
+{
+    metadata_t *meta = all_objects_first();
+    metadata_t *next;
+
+    while (meta != NULL) {
+        next = all_objects_next(meta);
+
+        if (meta->refcount == 0) {
+            free_object(obj_from_meta(meta));
+        }
+
+        meta = next;
+    }
 }
