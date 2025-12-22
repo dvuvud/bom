@@ -156,7 +156,7 @@ void deallocate(obj *p)
 
     meta = meta_from_obj(p);
 
-    if (meta->refcount != NULL) {
+    if (meta->refcount != 0) {
         return;
     }
     if (meta->destructor != NULL) {
