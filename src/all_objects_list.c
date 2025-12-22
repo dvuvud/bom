@@ -18,6 +18,7 @@ int linked_list_add(metadata_t *meta)
     node->meta = meta;
     node->next = head;
     head = node;
+    return 0;
 }
 
 void all_objects_remove(metadata_t *meta)

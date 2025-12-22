@@ -145,3 +145,21 @@ void cleanup()
         meta = next;
     }
 }
+
+void shutdown()
+{
+    metadata_t *meta = all_objects_first();
+    metadata_t *next;
+
+    while (meta != NULL) {
+        next = all_objects_next(meta);
+        free_object(obj_from_meta(meta));
+        meta = next;
+    }
+
+    // every object is removed so the list should already be empty..
+    all_objects_clear();
+
+    // only contains garbadge pointers at this point..
+    queue_clear(&pending_frees);
+}
