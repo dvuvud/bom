@@ -97,7 +97,7 @@ obj *allocate(size_t bytes, function1_t destructor)
 {
 	metadata_t *metadata;
 
-	metadata = calloc(1, sizeof(metadata_t) + bytes);
+	metadata = malloc(sizeof(metadata_t) + bytes);
 	if (metadata == NULL) {
 		return NULL;
 	}
