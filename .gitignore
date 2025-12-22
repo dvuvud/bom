@@ -56,3 +56,15 @@ docs/html
 
 # MacOS things
 *.DS_Store
+
+# Other things
+*.fuse*
+
+# Build dirs
+docs/coverage*
+bin/*
+obj/*
+
+# Don't ignore
+!*.keep
+!*.gitkeep

@@ -16,11 +16,32 @@ This will generate the documentation in the `docs/html` folder. You can open the
 
 ### Commands
 
-#### Using Makefile (Recommended)
+#### Using Makefile
 ```bash
 # Clone with submodules (om vi lägger till några)
 git clone --recursive https://github.com/IOOPM-UU/bom.git
 cd bom
 
-# Build instructions...
+# Build library
+make
 ```
+
+## Running tests
+
+#### Using Makefile
+```bash
+# Build and run tests
+make test
+
+# Build and run tests with Valgrind
+make memtest
+```
+
+## Generate coverage reports
+
+#### Using Makefile
+```bash
+# Generate reports
+make generate_coverage
+```
+After being created, coverage reports can be found in `docs/coverage`.
