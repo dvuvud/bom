@@ -132,18 +132,11 @@ size_t get_cascade_limit(void)
 
 void cleanup()
 {
-    metadata_t *meta = all_objects_first();
-    metadata_t *next;
-
-    while (meta != NULL) {
-        next = all_objects_next(meta);
-
-        if (meta->refcount == 0) {
-            free_object(obj_from_meta(meta));
-        }
-
-        meta = next;
+    while (pending_frees.count > 0) {
+        obj *garbage = queue_pop(&pending_frees);
+        free_object(garbage);
     }
+
 }
 
 void shutdown()
