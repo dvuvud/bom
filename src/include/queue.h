@@ -22,9 +22,9 @@ typedef struct queue_node queue_node_t;
  * @note This structure should be initialized to { NULL, NULL, 0 } before use.
  */
 typedef struct {
-	queue_node_t *head;
-	queue_node_t *tail;
-	size_t count;
+    queue_node_t *head;
+    queue_node_t *tail;
+    size_t count;
 } queue_t;
 
 /**
