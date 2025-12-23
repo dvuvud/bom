@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define REFCOUNT_MAX 255
+
 static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
@@ -74,6 +76,24 @@ void free_object(obj *p)
 
     // free metadata
     free(meta);
+}
+
+void retain(obj *p)
+{
+    if (p == NULL) {
+        return;
+    }
+    
+    // get metadata from object pointer
+    metadata_t *meta = meta_from_obj(p);
+    
+    if (meta->refcount == REFCOUNT_MAX) {
+        // error! refcount overflows
+        return;
+    }
+    
+    // decrease refcount
+    meta->refcount++;
 }
 
 void release(obj *p)
