@@ -35,6 +35,10 @@ $(TEST_BIN): $(LIB_OBJS) $(TEST_SRCS)
 test: $(TEST_BIN)
 	./$(TEST_BIN)
 
+# --------- Kör tester med Valgrind ----------
+memtest: $(TEST_BIN)
+	valgrind --leak-check=full --show-leak-kinds=all ./$(TEST_BIN)
+
 # ----------- Generera coverage reports ------------
 generate_coverage: clean
 	$(MAKE) test EXTRA_CFLAGS="$(COVERAGE_FLAGS)"
