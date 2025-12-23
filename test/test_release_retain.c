@@ -20,20 +20,31 @@ void test_release()
     retain(allocation);
     retain(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 3);
+
     release(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 2);
+
     release(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 1);
+
     release(allocation);
 }
 
 void test_retain_release()
 {
+    set_cascade_limit(0);
+
     obj *allocation = allocate(sizeof(int), NULL);
+
     retain(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 1);
+
     release(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 0);
+
+    deallocate(allocation);
+
+    set_cascade_limit(100);
 }
 
 void register_retain_release_tests()
