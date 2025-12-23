@@ -52,7 +52,7 @@ void test_cleanup_cascade_limit()
 
 static int destroyed = 0;
 
-void test_destructor(obj *o)
+void test_destructor_cleanup(obj *o)
 {
     destroyed++;
 }
@@ -67,7 +67,7 @@ void test_cleanup_calls_destructor(void)
 {
     destroyed = 0;
 
-    obj *o = allocate(sizeof(int), test_destructor);
+    obj *o = allocate(sizeof(int), test_destructor_cleanup);
     CU_ASSERT_PTR_NOT_NULL(o);
     cleanup();
 
