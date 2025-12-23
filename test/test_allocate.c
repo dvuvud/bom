@@ -7,6 +7,7 @@ void test_allocate_basic()
 {
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
+    deallocate(allocation);
 }
 
 void test_allocate_write_read()
@@ -15,12 +16,14 @@ void test_allocate_write_read()
     CU_ASSERT_PTR_NOT_NULL(allocation);
     *allocation = 100;
     CU_ASSERT_EQUAL(*allocation, 100);
+    deallocate(allocation);
 }
 
 void test_allocate_null_destructor()
 {
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
+    deallocate(allocation);
 }
 
 void register_allocate_tests()

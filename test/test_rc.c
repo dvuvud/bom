@@ -8,6 +8,7 @@ void test_rc_init_zero()
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 0);
+    deallocate(allocation);
 }
 
 void test_rc_null()
