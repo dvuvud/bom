@@ -6,9 +6,8 @@
 #define REFCOUNT_MAX 255
 
 static queue_t pending_frees = { NULL, NULL, 0 };
-
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
-//static size_t cascade_counter = 0;    // Den läggs till senare när hela cascade-logiken kopplas ihop.
+
 
 
 // Memory layout - [metadata][user object]
@@ -21,6 +20,7 @@ typedef struct metadata {
 } metadata_t;
 
 static metadata_t *object_list_head = NULL;
+static void default_destructor(obj *p);
 
 // Helper function to get metadata from user object
 static inline metadata_t *meta_from_obj(obj *p)
@@ -72,7 +72,11 @@ void free_object(obj *p)
     // call destructor if it exists
     if (meta->destructor != NULL) {
         meta->destructor(p);
-    }
+	} 
+	// Added default destructor to handle internal references
+	else { 	
+		default_destructor(p);
+	}
 
     // free metadata
     free(meta);
@@ -240,4 +244,35 @@ void shutdown()
 
     // only contains garbadge pointers at this point..
     queue_clear(&pending_frees);
+}
+
+// Default destructor
+static void default_destructor(obj *p)
+{
+	if (p == NULL) 
+	{
+		return;
+	}
+
+	metadata_t *meta = meta_from_obj(p);
+	size_t object_size = meta->size;
+	char *object_bytes = (char *)p;
+	
+	// Scan object memory in pointer-sized
+	for (size_t i = 0;
+		 i + sizeof(void *) <= object_size;
+		 i += sizeof(void *)){
+
+		// Extract potential pointer
+		void *value = *(void **)(object_bytes + i); 
+		
+		//Skip null pointers
+		if (value == NULL)	
+		{ 
+			continue; 
+		}
+		// TODO: bitmap_contains logic to be implemented later
+
+		release(value);
+	}
 }
