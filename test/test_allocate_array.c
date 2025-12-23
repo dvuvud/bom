@@ -8,7 +8,7 @@ void test_allocate_array_basic()
     int *allocation = allocate_array(5, sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
 
-    // FRIGÖRING
+    shutdown();
 }
 
 void test_allocate_array_zero()
@@ -16,7 +16,7 @@ void test_allocate_array_zero()
     int *allocation = allocate_array(0, sizeof(int), NULL);
     CU_ASSERT_PTR_NULL(allocation);
 
-    // FRIGÖRING
+    shutdown();
 }
 
 void test_allocate_array_zero_init()
@@ -28,7 +28,7 @@ void test_allocate_array_zero_init()
         CU_ASSERT_EQUAL(allocation[i], 0);
     }
 
-    // FRIGÖRING
+    shutdown();
 }
 
 void test_allocate_array_ptr(){
@@ -39,7 +39,7 @@ void test_allocate_array_ptr(){
         CU_ASSERT_PTR_NULL(allocation[i]);
     }
 
-    // FRIGÖRING
+    shutdown();
 }
 
 void test_allocate_array_ptr_obj(){
@@ -50,7 +50,7 @@ void test_allocate_array_ptr_obj(){
         CU_ASSERT_PTR_NULL(allocation[i]);
     }
 
-    // FRIGÖRING
+    shutdown();
 }
 
 void register_array_allocation_tests()
@@ -61,5 +61,5 @@ void register_array_allocation_tests()
     CU_add_test(suite, "test allocate_array with initialized to 0", test_allocate_array_zero_init);
     CU_add_test(suite, "test allocate_array with array of char *", test_allocate_array_ptr);
     CU_add_test(suite, "test allocate_array with array of obj *", test_allocate_array_ptr_obj);
-
 }
+

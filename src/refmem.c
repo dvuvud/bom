@@ -3,10 +3,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+static metadata_t object_list_head = NULL;
+
 static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
-//static size_t cascade_counter = 0;   // Den läggs till senare när hela cascade-logiken kopplas ihop.
+//static size_t cascade_counter = 0;    // Den läggs till senare när hela cascade-logiken kopplas ihop.
 
 
 // Memory layout - [metadata][user object]
@@ -14,16 +16,18 @@ typedef struct metadata {
     uint8_t refcount;         // objects can have a maximum of 255 references
     size_t size;              // size of user object
     function1_t destructor;   // destructor callback (may be NULL)
+    struct metadata *next;    // pointer to the next object's metadata struct
+    struct metadata *prev;    // pointer to the previous object's metadata struct
 } metadata_t;
 
 // Helper function to get metadata from user object
-static inline metadata_t *meta_from_obj(obj *p) 
+static inline metadata_t *meta_from_obj(obj *p)
 {
     return ((metadata_t *)p) - 1;
 }
 
 // Helper function to get user obj from metadata
-static inline obj *obj_from_meta(metadata_t *m) 
+static inline obj *obj_from_meta(metadata_t *m)
 {
     return (obj *)(m + 1);
 }
@@ -47,8 +51,22 @@ void free_object(obj *p)
     if (p == NULL) {
         return;
     }
+
     // get metadata
     metadata_t *meta = meta_from_obj(p);
+
+    metadata_t *next_meta = meta->next;
+    metadata_t *prev_meta = meta->prev;
+
+    // Reassign the next objects prev meta link
+    if (next_meta) {
+        next_meta->prev = meta->prev;
+    }
+
+    // Reassign the previous objects next meta link
+    if (prev_meta) {
+        prev_meta->next = meta->next;
+    }
 
     // call destructor if it exists
     if (meta->destructor != NULL) {
@@ -95,18 +113,27 @@ void release(obj *p)
 
 obj *allocate(size_t bytes, function1_t destructor)
 {
-	metadata_t *metadata;
+    metadata_t *metadata;
 
-	metadata = malloc(sizeof(metadata_t) + bytes);
-	if (metadata == NULL) {
-		return NULL;
-	}
-	
-	metadata->refcount = 0;
-	metadata->size = bytes;
-	metadata->destructor = destructor;
+    metadata = malloc(sizeof(metadata_t) + bytes);
+    if (metadata == NULL) {
+        return NULL;
+    }
+    
+    metadata->refcount = 0;
+    metadata->size = bytes;
+    metadata->destructor = destructor;
 
-	return obj_from_meta(metadata);
+    metadata->next = object_list_head;
+    metadata->prev = NULL;
+
+    if (object_list_head != NULL) {
+        object_list_head->prev = metadata;
+    }
+
+    object_list_head = metadata;
+
+    return obj_from_meta(metadata);
 }
 
 // Allocates and null-initializes an array with `elememts` number of elements of `elem_size` size
@@ -129,6 +156,15 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     metadata->refcount = 0;
     metadata->size = total_bytes;
     metadata->destructor = destructor;
+
+    metadata->next = object_list_head;
+    metadata->prev = NULL;
+
+    if (object_list_head != NULL) {
+        object_list_head->prev = metadata;
+    }
+
+    object_list_head = metadata;
 
     return obj_from_meta(metadata);
 }
@@ -159,8 +195,30 @@ void deallocate(obj *p)
     if (meta->refcount != 0) {
         return;
     }
-    if (meta->destructor != NULL) {
-        meta->destructor(p);
+
+    free_object(p);
+}
+
+void cleanup()
+{
+    while (pending_frees.count > 0) {
+        obj *garbage = queue_pop(&pending_frees);
+        free_object(garbage);
     }
-    free(meta);
+
+}
+
+void shutdown()
+{
+    metadata_t *meta = object_list_head;
+    metadata_t *next;
+
+    while (meta != NULL) {
+        next = meta->next;
+        free_object(obj_from_meta(meta));
+        meta = next;
+    }
+
+    // only contains garbadge pointers at this point..
+    queue_clear(&pending_frees);
 }
