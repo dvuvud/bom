@@ -8,7 +8,7 @@ void test_allocate_array_basic()
     int *allocation = allocate_array(5, sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
 
-    shutdown();
+    deallocate(allocation);
 }
 
 void test_allocate_array_zero()
@@ -16,7 +16,7 @@ void test_allocate_array_zero()
     int *allocation = allocate_array(0, sizeof(int), NULL);
     CU_ASSERT_PTR_NULL(allocation);
 
-    shutdown();
+    deallocate(allocation);
 }
 
 void test_allocate_array_zero_init()
@@ -28,7 +28,7 @@ void test_allocate_array_zero_init()
         CU_ASSERT_EQUAL(allocation[i], 0);
     }
 
-    shutdown();
+    deallocate(allocation);
 }
 
 void test_allocate_array_ptr(){
@@ -39,7 +39,7 @@ void test_allocate_array_ptr(){
         CU_ASSERT_PTR_NULL(allocation[i]);
     }
 
-    shutdown();
+    deallocate(allocation);
 }
 
 void test_allocate_array_ptr_obj(){
@@ -50,7 +50,7 @@ void test_allocate_array_ptr_obj(){
         CU_ASSERT_PTR_NULL(allocation[i]);
     }
 
-    shutdown();
+    deallocate(allocation);
 }
 
 void register_array_allocation_tests()
