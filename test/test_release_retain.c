@@ -42,7 +42,7 @@ void test_retain_release()
     release(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 0);
 
-    deallocate(allocation);
+    cleanup();
 
     set_cascade_limit(100);
 }
