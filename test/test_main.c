@@ -6,6 +6,9 @@ void register_queue_tests();
 void register_cascade_limit_tests();
 void register_cleanup_shutdown_tests();
 void register_deallocate_tests();
+void register_allocate_tests();
+void register_rc_tests();
+void register_retain_release_tests();
 
 int main() {
     CU_initialize_registry();
@@ -16,6 +19,9 @@ int main() {
     register_cascade_limit_tests();
     register_cleanup_shutdown_tests();
     register_deallocate_tests();
+    register_allocate_tests();
+    register_rc_tests();
+    register_retain_release_tests();
 
     CU_basic_run_tests();
 
