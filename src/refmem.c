@@ -3,11 +3,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define REFCOUNT_MAX 255
+
 static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
 //static size_t cascade_counter = 0;   // Den läggs till senare när hela cascade-logiken kopplas ihop.
-static size_t refcount_max = 255;
 
 
 // Memory layout - [metadata][user object]
@@ -69,10 +70,12 @@ void retain(obj *p)
     // get metadata from object pointer
     metadata_t *meta = meta_from_obj(p);
     
-    if (meta->refcount == refcount_max) {
-        // error!
+    if (meta->refcount == REFCOUNT_MAX) {
+        // error! refcount overflows
         return;
     }
+    
+    // decrease refcount
     meta->refcount++;
 }
 
