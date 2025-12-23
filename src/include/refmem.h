@@ -10,7 +10,6 @@
  * @note Because the reference counter is 8-bit, each object can hold at most
  * 255 active references. Overflowing this limit results in undefined
  * behavior.
-
  */
 typedef void obj;
 
