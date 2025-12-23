@@ -4,10 +4,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+static metadata_t object_list_head = NULL;
+
 static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100; 		// Global cascade limit (default value)
-//static size_t cascade_counter = 0;   // Den läggs till senare när hela cascade-logiken kopplas ihop.
+//static size_t cascade_counter = 0;    // Den läggs till senare när hela cascade-logiken kopplas ihop.
 
 
 // Memory layout - [metadata][user object]
@@ -15,6 +17,8 @@ typedef struct metadata {
 	uint8_t refcount;         // objects can have a maximum of 255 references
 	size_t size;              // size of user object
 	function1_t destructor;   // destructor callback (may be NULL)
+    struct metadata *next;    // pointer to the next object's metadata struct
+    struct metadata *prev;    // pointer to the previous object's metadata struct
 } metadata_t;
 
 // Helper function to get metadata from user object
@@ -48,8 +52,22 @@ void free_object(obj *p)
 	if (p == NULL) {
 		return;
 	}
+
 	// get metadata
 	metadata_t *meta = meta_from_obj(p);
+
+    metadata_t *next_meta = meta->next;
+    metadata_t *prev_meta = meta->prev;
+
+    // Reassign the next objects prev meta link
+    if (next_meta) {
+        next_meta->prev = meta->prev;
+    }
+
+    // Reassign the previous objects next meta link
+    if (prev_meta) {
+        prev_meta->next = meta->next;
+    }
 
 	// call destructor if it exists
 	if (meta->destructor != NULL) {
@@ -115,6 +133,15 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
 	metadata->size = total_bytes;
 	metadata->destructor = destructor;
 
+    metadata->next = object_list_head;
+    metadata->prev = NULL;
+
+    if (object_list_head != NULL) {
+        object_list_head->prev = metadata;
+    }
+
+    object_list_head = metadata;
+
 	return obj_from_meta(metadata);
 }
 
@@ -141,17 +168,14 @@ void cleanup()
 
 void shutdown()
 {
-    metadata_t *meta = all_objects_first();
+    metadata_t *meta = object_list_head;
     metadata_t *next;
 
     while (meta != NULL) {
-        next = all_objects_next(meta);
+        next = meta->next;
         free_object(obj_from_meta(meta));
         meta = next;
     }
-
-    // every object is removed so the list should already be empty..
-    all_objects_clear();
 
     // only contains garbadge pointers at this point..
     queue_clear(&pending_frees);
