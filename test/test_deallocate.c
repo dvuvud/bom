@@ -1,6 +1,5 @@
 #include <CUnit/Basic.h>
-#include "include/refmem.h"
-
+#include "../src/include/refmem.h"
 
 static int destructor_calls = 0;
 
@@ -10,7 +9,6 @@ void test_destructor(obj *p)
     (void)p;
     destructor_calls++;
 }
-
 
 void test_deallocate_null()
 {
@@ -32,7 +30,7 @@ void test_deallocate_calls_destructor()
 }
 
 void test_deallocate_with_rc_zero()
-{   
+{
     obj *p = allocate_array(1, sizeof(int), NULL);
     CU_ASSERT_EQUAL(rc(p), 0);
 
@@ -52,8 +50,7 @@ void test_deallocate_with_rc_not_zero()
     CU_ASSERT_EQUAL(destructor_calls, 0);
 }
 
-
-void register_deallocate_tests() 
+void register_deallocate_tests()
 {
 	CU_pSuite suite = CU_add_suite("Deallocate", NULL, NULL);
     CU_add_test(suite, "test if deallocate input NULL is safe", test_deallocate_null);
