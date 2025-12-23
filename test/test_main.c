@@ -15,7 +15,7 @@ int main() {
     register_queue_tests();
     register_cascade_limit_tests();
     register_cleanup_shutdown_tests();
-    register_deallocate_tests(); 
+    register_deallocate_tests();
 
     CU_basic_run_tests();
 

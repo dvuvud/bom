@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-static metadata_t object_list_head = NULL;
-
 static queue_t pending_frees = { NULL, NULL, 0 };
 
 static size_t cascade_limit = 100;      // Global cascade limit (default value)
@@ -19,6 +17,8 @@ typedef struct metadata {
     struct metadata *next;    // pointer to the next object's metadata struct
     struct metadata *prev;    // pointer to the previous object's metadata struct
 } metadata_t;
+
+static metadata_t *object_list_head = NULL;
 
 // Helper function to get metadata from user object
 static inline metadata_t *meta_from_obj(obj *p)
@@ -55,17 +55,16 @@ void free_object(obj *p)
     // get metadata
     metadata_t *meta = meta_from_obj(p);
 
-    metadata_t *next_meta = meta->next;
-    metadata_t *prev_meta = meta->prev;
-
-    // Reassign the next objects prev meta link
-    if (next_meta) {
-        next_meta->prev = meta->prev;
+    // Reassign the previos objects next meta link, or the head of the list
+    if (meta->prev) {
+        meta->prev->next = meta->next;
+    } else {
+        object_list_head = meta->next;
     }
 
-    // Reassign the previous objects next meta link
-    if (prev_meta) {
-        prev_meta->next = meta->next;
+    // Reassign the next objects prev meta link
+    if (meta->next) {
+        meta->next->prev = meta->prev;
     }
 
     // call destructor if it exists
@@ -119,7 +118,7 @@ obj *allocate(size_t bytes, function1_t destructor)
     if (metadata == NULL) {
         return NULL;
     }
-    
+
     metadata->refcount = 0;
     metadata->size = bytes;
     metadata->destructor = destructor;
