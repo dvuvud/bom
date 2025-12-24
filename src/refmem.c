@@ -274,7 +274,7 @@ static void default_destructor(obj *p)
 		
 		// Skip null pointers
 		if (value != NULL && hashset_contains(value)) { 
-			release(cursor); 
+			release(value); 
 		}
 
         cursor++;

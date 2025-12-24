@@ -34,6 +34,10 @@ static void hashset_init(void)
 
 void hashset_add(void *addr)
 {
+    if (addr == NULL) {
+        return;
+    }
+
     if (addr_set.buckets == NULL) {
         hashset_init();
     }
