@@ -5,10 +5,8 @@
 
 #define REFCOUNT_MAX 255
 
-static queue_t pending_frees = { NULL, NULL, 0 };
-static size_t cascade_limit = 100;      // Global cascade limit (default value)
-
-
+static queue_t pending_frees = { NULL, NULL, 0 };       // Queue of cascading frees
+static size_t cascade_limit = 100;                      // Global cascade limit (default value)
 
 // Memory layout - [metadata][user object]
 typedef struct metadata {
@@ -72,9 +70,8 @@ void free_object(obj *p)
     // call destructor if it exists
     if (meta->destructor != NULL) {
         meta->destructor(p);
-	} 
-	// Added default destructor to handle internal references
-	else { 	
+	}
+    else { 
 		default_destructor(p);
 	}
 
@@ -249,30 +246,27 @@ void shutdown()
 // Default destructor
 static void default_destructor(obj *p)
 {
-	if (p == NULL) 
-	{
+	if (p == NULL) {
 		return;
 	}
 
 	metadata_t *meta = meta_from_obj(p);
 	size_t object_size = meta->size;
-	char *object_bytes = (char *)p;
+
+    void **cursor = (void **)p;
+    void **end = (void **)((char *)p + object_size);
 	
 	// Scan object memory in pointer-sized
-	for (size_t i = 0;
-		 i + sizeof(void *) <= object_size;
-		 i += sizeof(void *)){
-
-		// Extract potential pointer
-		void *value = *(void **)(object_bytes + i); 
+	while (cursor < end) {
+		// Extract potential pointer at the current memory address
+        void *value = *cursor;
 		
-		//Skip null pointers
-		if (value == NULL)	
-		{ 
-			continue; 
+		// Skip null pointers
+		if (value != NULL) { 
+		    // TODO: bitmap_contains logic to be implemented later
+			release(cursor); 
 		}
-		// TODO: bitmap_contains logic to be implemented later
 
-		release(value);
+        cursor++;
 	}
 }
