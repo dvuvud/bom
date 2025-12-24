@@ -1,5 +1,6 @@
 #include "include/refmem.h"
 #include "include/queue.h"
+#include "include/hashset.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -51,6 +52,8 @@ void free_object(obj *p)
     if (p == NULL) {
         return;
     }
+
+    hashset_remove(p);
 
     // get metadata
     metadata_t *meta = meta_from_obj(p);
@@ -144,6 +147,9 @@ obj *allocate(size_t bytes, function1_t destructor)
     metadata->size = bytes;
     metadata->destructor = destructor;
 
+    obj *user_object = obj_from_meta(metadata);
+    hashset_add(user_object);
+
     metadata->next = object_list_head;
     metadata->prev = NULL;
 
@@ -176,6 +182,9 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     metadata->refcount = 0;
     metadata->size = total_bytes;
     metadata->destructor = destructor;
+
+    obj *user_object = obj_from_meta(metadata);
+    hashset_add(user_object);
 
     metadata->next = object_list_head;
     metadata->prev = NULL;
@@ -241,6 +250,8 @@ void shutdown()
 
     // only contains garbadge pointers at this point..
     queue_clear(&pending_frees);
+
+    hashset_cleanup();
 }
 
 // Default destructor
@@ -262,8 +273,7 @@ static void default_destructor(obj *p)
         void *value = *cursor;
 		
 		// Skip null pointers
-		if (value != NULL) { 
-		    // TODO: bitmap_contains logic to be implemented later
+		if (value != NULL && hashset_contains(value)) { 
 			release(cursor); 
 		}
 
