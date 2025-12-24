@@ -53,8 +53,6 @@ void free_object(obj *p)
         return;
     }
 
-    hashset_remove(p);
-
     // get metadata
     metadata_t *meta = meta_from_obj(p);
 
@@ -78,6 +76,8 @@ void free_object(obj *p)
 		default_destructor(p);
 	}
 
+
+    hashset_remove(p);
     // free metadata
     free(meta);
 }
