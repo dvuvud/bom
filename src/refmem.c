@@ -48,7 +48,7 @@ size_t rc(obj *p)
     return meta->refcount;
 }
 
-void free_object(obj *p)
+static void free_object(obj *p)
 {
     if (p == NULL) {
         return;
@@ -76,6 +76,17 @@ void free_object(obj *p)
 
     // free metadata
     free(meta);
+}
+
+static void process_pending_frees()
+{
+    // free objects
+    size_t i = 0;
+    while (pending_frees.count > 0 && i < cascade_limit) {
+        obj *garbage = queue_pop(&pending_frees);
+        free_object(garbage);
+        i++;
+    }
 }
 
 void retain(obj *p)
@@ -121,13 +132,7 @@ void release(obj *p)
     // object is garbage, add it to the queue
     queue_push(&pending_frees, p);
 
-    // free objects
-    size_t i = 0;
-    while (pending_frees.count > 0 && i < cascade_limit) {
-        obj *garbage = queue_pop(&pending_frees);
-        free_object(garbage);
-        i++;
-    }
+    process_pending_frees();
 }
 
 obj *allocate(size_t bytes, function1_t destructor)
@@ -215,7 +220,9 @@ void deallocate(obj *p)
         return;
     }
 
-    free_object(p);
+    queue_push(&pending_frees, p);
+
+    process_pending_frees();
 }
 
 void cleanup()
