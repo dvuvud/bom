@@ -7,6 +7,7 @@ void register_cascade_limit_tests();
 void register_cleanup_shutdown_tests();
 void register_deallocate_tests();
 void register_default_destructor_tests();
+void register_hashset_tests();
 
 int main() {
     CU_initialize_registry();
@@ -18,6 +19,7 @@ int main() {
     register_cleanup_shutdown_tests();
     register_deallocate_tests();
     register_default_destructor_tests();
+    register_hashset_tests();
 
     CU_basic_run_tests();
 
