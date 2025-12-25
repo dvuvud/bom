@@ -1,15 +1,13 @@
 #include "include/refmem.h"
 #include "include/queue.h"
+#include "include/hashset.h"
 #include <stdint.h>
 #include <stdlib.h>
 
 #define REFCOUNT_MAX 255
 
-static queue_t pending_frees = { NULL, NULL, 0 };
-
-static size_t cascade_limit = 100;      // Global cascade limit (default value)
-//static size_t cascade_counter = 0;    // Den läggs till senare när hela cascade-logiken kopplas ihop.
-
+static queue_t pending_frees = { NULL, NULL, 0 };       // Queue of cascading frees
+static size_t cascade_limit = 100;                      // Global cascade limit (default value)
 
 // Memory layout - [metadata][user object]
 typedef struct metadata {
@@ -21,6 +19,7 @@ typedef struct metadata {
 } metadata_t;
 
 static metadata_t *object_list_head = NULL;
+static void default_destructor(obj *p);
 
 // Helper function to get metadata from user object
 static inline metadata_t *meta_from_obj(obj *p)
@@ -72,8 +71,13 @@ void free_object(obj *p)
     // call destructor if it exists
     if (meta->destructor != NULL) {
         meta->destructor(p);
-    }
+	}
+    else { 
+		default_destructor(p);
+	}
 
+
+    hashset_remove(p);
     // free metadata
     free(meta);
 }
@@ -143,6 +147,9 @@ obj *allocate(size_t bytes, function1_t destructor)
     metadata->size = bytes;
     metadata->destructor = destructor;
 
+    obj *user_object = obj_from_meta(metadata);
+    hashset_add(user_object);
+
     metadata->next = object_list_head;
     metadata->prev = NULL;
 
@@ -175,6 +182,9 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     metadata->refcount = 0;
     metadata->size = total_bytes;
     metadata->destructor = destructor;
+
+    obj *user_object = obj_from_meta(metadata);
+    hashset_add(user_object);
 
     metadata->next = object_list_head;
     metadata->prev = NULL;
@@ -240,4 +250,33 @@ void shutdown()
 
     // only contains garbadge pointers at this point..
     queue_clear(&pending_frees);
+
+    hashset_cleanup();
+}
+
+// Default destructor
+static void default_destructor(obj *p)
+{
+	if (p == NULL) {
+		return;
+	}
+
+	metadata_t *meta = meta_from_obj(p);
+	size_t object_size = meta->size;
+
+    void **cursor = (void **)p;
+    void **end = (void **)((char *)p + object_size);
+	
+	// Scan object memory in pointer-sized
+	while (cursor < end) {
+		// Extract potential pointer at the current memory address
+        void *value = *cursor;
+		
+		// Skip null pointers
+		if (value != NULL && hashset_contains(value)) { 
+			release(value); 
+		}
+
+        cursor++;
+	}
 }
