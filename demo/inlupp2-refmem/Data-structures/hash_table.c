@@ -5,9 +5,7 @@
 
 #include "hash_table.h"
 #include "linked_list.h"
-
-
-
+#include "refmem.h"
 
 //Default hash function
 int hash_function(elem_t key){
@@ -16,8 +14,8 @@ int hash_function(elem_t key){
 
 //Static functions
 static entry_t *find_previous_entry_for_key(entry_t *bucket, elem_t new_key, ioopm_eq_function *eq_fun) {
-    //returns the entry before the one we are looking for, 
-    //or, in case such an entry does not exist, the entry 
+    //returns the entry before the one we are looking for,
+    //or, in case such an entry does not exist, the entry
     //whose next pointer should be pointing to the entry once
     //we have inserted it.
     entry_t *cursor = bucket;
@@ -31,7 +29,15 @@ static entry_t *find_previous_entry_for_key(entry_t *bucket, elem_t new_key, ioo
 }
 
 static entry_t *entry_create(elem_t key, elem_t value, entry_t *next){
-    entry_t *new_entry = calloc(1,sizeof(entry_t));
+    entry_t *new_entry = allocate(sizeof(entry_t), NULL);
+
+    if (key.p != NULL) {
+        retain(key.p);
+    }
+    if (value.p != NULL) {
+        retain(value.p);
+    }
+
     new_entry->key = key;
     new_entry->value = value;
     new_entry->next = next;
@@ -39,7 +45,13 @@ static entry_t *entry_create(elem_t key, elem_t value, entry_t *next){
 }
 
 static void entry_destroy(entry_t *entry, ioopm_eq_function *eq_fun) {
-    free(entry);
+    if (entry->key.p != NULL) {
+        release(entry->key.p);
+    }
+    if (entry->value.p != NULL) {
+        release(entry->value.p);
+    }
+    deallocate(entry);
 }
 
 static bool value_equiv(elem_t key_ignored, elem_t value, void *x){
@@ -51,8 +63,8 @@ static bool value_equiv(elem_t key_ignored, elem_t value, void *x){
 
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hf, ioopm_eq_function *eq_fun) {
     //create an empty hash table with dummy entries in each bucket
-    ioopm_hash_table_t *result = calloc(1, sizeof(ioopm_hash_table_t));
-    for (int i = 0; i < No_Buckets; i++){ 
+    ioopm_hash_table_t *result = allocate(sizeof(ioopm_hash_table_t), NULL);
+    for (int i = 0; i < No_Buckets; i++){
         result->buckets[i] = entry_create(int_elem(0),ptr_elem(NULL),NULL);
     }
     if (hf == NULL){
@@ -65,7 +77,7 @@ ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hf, ioopm_eq_fu
     } else {
         result->eq_fun = eq_fun;
     }
-    
+
     return result;
 }
 
@@ -81,7 +93,7 @@ void ioopm_hash_table_destroy(ioopm_hash_table_t *ht) {
             current = next; // gå vidare till nästa entry inom bucketen
         }
     }
-    free(ht);
+    release(ht);
 }
 
 void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
@@ -95,6 +107,12 @@ void ioopm_hash_table_insert(ioopm_hash_table_t *ht, elem_t key, elem_t value) {
 
     /// Check if the next entry should be updated or not
     if (next != NULL && ht->eq_fun(next->key, key)) {
+        if (next->value.p != NULL) {
+            release(next->value.p);
+        }
+        if (value.p != NULL) {
+            retain(value.p);
+        }
         next->value = value;
     }
     else {
@@ -134,7 +152,7 @@ ioopm_option_t ioopm_hash_table_remove(ioopm_hash_table_t *ht, elem_t key) {
         ioopm_option_t res = {.success = true, .value = removed_value};
         return res;
     }
-    
+
 }
 
 size_t ioopm_hash_table_size(ioopm_hash_table_t *ht){
@@ -234,19 +252,16 @@ bool ioopm_hash_table_any(ioopm_hash_table_t *ht, ioopm_predicate *pred, void *a
 
 
 bool ioopm_hash_table_has_key(ioopm_hash_table_t *ht, elem_t key){
-    //Skapa en linked list med alla keys, och loopa igenom listan och kolla ifall nyckeln är samma 
-    //som den vi skickar som argument
-    ioopm_list_t *keys = ioopm_hash_table_keys(ht);
-    ioopm_link_t *key_in_ht = keys->head;
-    ioopm_eq_function *eq_fun = keys->eq_fun;
-    while(key_in_ht){
-        if (eq_fun(key_in_ht->element,key)) {
-            ioopm_linked_list_destroy(keys);
+    ioopm_hash_function *hf = ht->hash_func;
+    int bucket = abs(hf(key)) % No_Buckets;
+
+    entry_t *cur = ht->buckets[bucket]->next;
+    while (cur) {
+        if (ht->eq_fun(cur->key, key)) {
             return true;
         }
-        key_in_ht = key_in_ht->next;
+        cur = cur->next;
     }
-    ioopm_linked_list_destroy(keys);
     return false;
 }
 

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "linked_list.h"
+#include "refmem.h"
 
 /**
  * @file linked_list.c
@@ -21,12 +22,12 @@
 ///---------------------------------------------
 bool int_eq(elem_t a, elem_t b) { return a.i == b.i; }
 
-bool str_eq(elem_t a, elem_t b) 
-{ 
+bool str_eq(elem_t a, elem_t b)
+{
     const char *sa = (const char *)a.p;
     const char *sb = (const char *)b.p;
 
-    if (sa == NULL || sb == NULL){ 
+    if (sa == NULL || sb == NULL){
     return sa == sb;
     }
     else{
@@ -36,7 +37,7 @@ bool str_eq(elem_t a, elem_t b)
 
 static ioopm_link_t *link_create(elem_t value, ioopm_link_t *next)
 {
-    ioopm_link_t *link = calloc(1, sizeof(*link));
+    ioopm_link_t *link = allocate(sizeof(*link), NULL);
     assert(link);
 
     link->element = value;
@@ -65,7 +66,7 @@ static int list_inner_adjust_index(int index, int upper_bound)
         assert(false && "Index out of bounds");
     }
 
-    return index; 
+    return index;
 }
 
 ///---------------------------------------------------
@@ -77,18 +78,18 @@ static int list_inner_adjust_index(int index, int upper_bound)
 /// @return an empty linked list
 ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function *eq_fun)
 {
-    ioopm_list_t *list = calloc(1, sizeof(*list));
+    ioopm_list_t *list = allocate(sizeof(*list), NULL);
     assert(list);
 
     list->head = link_create(int_elem(0), NULL);
     list->tail = list->head;   // if empty list: tail == head
-    list->size = 0;   
+    list->size = 0;
 
     if (eq_fun != NULL)
     {
         list->eq_fun = eq_fun;
     }
-    else 
+    else
     {
         list->eq_fun = int_eq;
     }
@@ -106,8 +107,8 @@ void ioopm_linked_list_destroy(ioopm_list_t *list)
    ioopm_linked_list_clear(list);
 
     // Free list structur
-    free(list->head);
-    free(list);
+    deallocate(list->head);
+    release(list);
 }
 
 
@@ -122,13 +123,17 @@ void ioopm_linked_list_append(ioopm_list_t *list, elem_t value)
     // make sure list is not NULL
     assert(list);
 
+    if (value.p != NULL) {
+        retain(value.p);
+    }
+
     // create a new link,tha placed at the end
     ioopm_link_t *new_link = link_create(value, NULL);
 
     // Connect the new node after the current tail
     list->tail->next = new_link;
     // let pointer poit to the nexts tail
-    list->tail = new_link; 
+    list->tail = new_link;
 
     list->size++;
 }
@@ -140,6 +145,10 @@ void ioopm_linked_list_append(ioopm_list_t *list, elem_t value)
 void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 {
     assert(list);
+
+    if (value.p != NULL) {
+        retain(value.p);
+    }
     // Create a new node and point to the current head
     ioopm_link_t *new_link = link_create(value, list->head->next);
 
@@ -159,7 +168,7 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 /// the last element.
 /// @param list the linked list that will be extended
 /// @param index the position in the list
-/// @param value the value to be inserted 
+/// @param value the value to be inserted
 /// @note Supposes that list is not NULL, faials with assert(list) if it is NULL
 /// @note Supports generic data using elem_t
 /// @note Uses a tail pointer to achieve O(1) time complexity for insert at end
@@ -169,8 +178,11 @@ void ioopm_linked_list_insert(ioopm_list_t *list, size_t index, elem_t value)
     // to check if idex in the range
     int valid_index = list_inner_adjust_index(index, (int)list->size + 1);
 
-     ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index);
+    ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index);
 
+    if (value.p != NULL) {
+        retain(value.p);
+    }
     // create a new link
     ioopm_link_t *new_link = link_create(value, prev->next);
     prev->next = new_link;
@@ -178,7 +190,7 @@ void ioopm_linked_list_insert(ioopm_list_t *list, size_t index, elem_t value)
     // if we inserted at the end, update the tail
     if (new_link->next == NULL)
     {
-         list->tail = new_link; 
+         list->tail = new_link;
     }
     list->size++;
 }
@@ -193,18 +205,21 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, size_t index)
 {
     assert(list);
     // keep index in range
-    int valid_index = list_inner_adjust_index(index, (int)list->size); 
+    int valid_index = list_inner_adjust_index(index, (int)list->size);
 
     // find node before target
-    ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index); 
+    ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index);
     // node to delete
-    ioopm_link_t *to_remove = prev->next; 
+    ioopm_link_t *to_remove = prev->next;
     assert(to_remove); // must exist
 
     prev->next = to_remove->next;  // save value before freeing
     elem_t value = to_remove->element; // unlink it
-    free(to_remove); // free memory
-    
+    if (value.p != NULL) {
+        release(value.p);
+    }
+    deallocate(to_remove); // free memory
+
     // removed the last real node
     if (prev->next == NULL)
     {
@@ -227,7 +242,7 @@ elem_t ioopm_linked_list_get(const ioopm_list_t *list, size_t index)
     ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index);
     assert(prev->next);
     // return the value at that position
-    return prev->next->element; 
+    return prev->next->element;
 }
 
 /// @brief Test if an element is in the list
@@ -279,13 +294,17 @@ bool ioopm_linked_list_is_empty(const ioopm_list_t *list)
 void ioopm_linked_list_clear(ioopm_list_t *list)
 {
     assert(list);
-     
+
     ioopm_link_t *cursor = list->head->next; // skip sentinel
-    while (cursor)
-    {
+    while (cursor) {
         ioopm_link_t *tmp = cursor;      // Remember current node
         cursor = cursor->next;    // Move forward
-        free(tmp); // Free node
+
+        if (tmp->element.p != NULL) {
+            release(tmp->element.p);
+        }
+
+        deallocate(tmp); // Free node
     }
     // reset sentinel pointers and size
     list->head->next = NULL;
@@ -352,7 +371,7 @@ bool ioopm_linked_list_any(ioopm_list_t *list, ioopm_predicate *prop, void *extr
 /// @note Assumes that list and fun are not NULL. Fails with assert(list) if violated.
 /// @note The function pointer operates on elem_t values
 /// @note Supports generic data using elem_t
-void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_function *fun, void *extra) 
+void ioopm_linked_list_apply_to_all(ioopm_list_t *list, ioopm_apply_function *fun, void *extra)
 {
     assert(list);
     assert(fun);

@@ -4,15 +4,18 @@
 #include <string.h>
 #include "linked_list.h"
 #include "iterator.h"
+#include "refmem.h"
 #define int_elem(x) (elem_t) { .i=(x) }
 #define ptr_elem(x) (elem_t) { .p=(x) }
 
 ioopm_list_iterator_t *ioopm_iterator_create(ioopm_list_t *list) {
     //creates an iterator and allocates memory for it
-    ioopm_list_iterator_t *result = calloc(1,sizeof(struct iter));
+    ioopm_list_iterator_t *result = allocate(sizeof(struct iter), NULL);
+
+    retain(list);
     result->current = list->head->next;
     result->list = list;
-    return result; 
+    return result;
 }
 
 bool ioopm_iterator_has_next(ioopm_list_iterator_t *iter){
@@ -42,9 +45,12 @@ elem_t ioopm_iterator_current(ioopm_list_iterator_t *iter){
     } else {
         return iter->current->element;
     }
-    
+
 }
 
 void ioopm_iterator_destroy(ioopm_list_iterator_t *iter){
-    free(iter);
+    if (!iter) return;
+
+    release(iter->list);
+    release(iter);
 }
