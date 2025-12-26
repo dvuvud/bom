@@ -92,7 +92,7 @@ void retain(obj *p)
         return;
     }
 
-    // decrease refcount
+    // increase refcount
     meta->refcount++;
 }
 

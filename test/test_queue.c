@@ -2,12 +2,14 @@
 #include "../src/include/queue.h"
 #include <stdlib.h>
 
-struct queue_node {
+struct queue_node
+{
     void *data;
     struct queue_node *next;
 };
 
-void test_queue_basic_operations() {
+void test_queue_basic_operations()
+{
     queue_t q = { .head = NULL, .tail = NULL, .count = 0 };
 
     int val1 = 100;
@@ -34,7 +36,8 @@ void test_queue_basic_operations() {
     queue_clear(&q);
 }
 
-void test_queue_clear() {
+void test_queue_clear()
+{
     queue_t q = { NULL, NULL, 0 };
     int dummy = 42;
 
@@ -48,10 +51,17 @@ void test_queue_clear() {
     CU_ASSERT_PTR_NULL(q.head);
 }
 
+void test_queue_pop_empty()
+{
+    queue_t q = { NULL, NULL, 0 };
+    CU_ASSERT_PTR_NULL(queue_pop(&q));
+}
+
 void register_queue_tests() {
     CU_pSuite suite = CU_add_suite("Queue_Internal_Tests", NULL, NULL);
     if (suite != NULL) {
         CU_add_test(suite, "test push and pop logic", test_queue_basic_operations);
         CU_add_test(suite, "test clear functionality", test_queue_clear);
+        CU_add_test(suite, "test queue pop on empty queue", test_queue_pop_empty);
     }
 }

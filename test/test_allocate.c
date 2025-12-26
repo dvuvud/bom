@@ -29,6 +29,16 @@ void test_allocate_null_destructor()
     shutdown();
 }
 
+void test_allocate_huge()
+{
+    size_t big_count = (((size_t) 1)<<38) - 1;
+    
+    obj **allocation = allocate(big_count, NULL);
+    CU_ASSERT_PTR_NULL(allocation);
+    
+    shutdown();
+}
+
 void register_allocate_tests()
 {
     CU_pSuite suite = CU_add_suite("allocate()", 0, 0);
@@ -36,4 +46,5 @@ void register_allocate_tests()
     CU_add_test(suite, "test allocate basic allocation", test_allocate_basic);
     CU_add_test(suite, "test allocate with write and read memory", test_allocate_write_read);
     CU_add_test(suite, "test allocate with null destructor", test_allocate_null_destructor);
+    CU_add_test(suite, "test allocate with huge data", test_allocate_huge);
 }
