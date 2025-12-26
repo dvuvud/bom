@@ -2,7 +2,7 @@
 CC = gcc
 
 # Kompilatorflaggor
-CFLAGS = -Wall -g -fprofile-arcs -ftest-coverage
+CFLAGS = -Wall -g -fprofile-arcs -ftest-coverage -I../../src/include
 
 # Länkningsflaggor för tester
 LDLIBS = -lcunit
@@ -16,15 +16,24 @@ TESTS = Tests
 
 # Källfiler
 MAIN_SRC = $(BACKEND)/Webstore_backend.c \
+		   ../../src/refmem.c \
+		   ../../src/queue.c \
+           ../../src/hashset.c \
            $(DATA_STRUCTURES)/hash_table.c \
            $(DATA_STRUCTURES)/linked_list.c \
            $(DATA_STRUCTURES)/iterator.c \
            $(UTILS)/utils.c
 
-TEST_SRC = $(TESTS)/backend_tests.c
+TEST_SRC = $(TESTS)/backend_tests.c \
+		   ../../src/refmem.c \
+		   ../../src/queue.c \
+           ../../src/hashset.c
 
 FRONTEND_SRC = $(FRONTEND)/Webstore_frontend.c \
                $(BACKEND)/Webstore_backend.c \
+			   ../../src/refmem.c \
+			   ../../src/queue.c \
+			   ../../src/hashset.c \
                $(DATA_STRUCTURES)/hash_table.c \
                $(DATA_STRUCTURES)/linked_list.c \
                $(DATA_STRUCTURES)/iterator.c \
@@ -82,7 +91,7 @@ coverage: $(TEST_TARGET)
 # Kör frontend-programmet
 run: $(FRONTEND_TARGET)
 	./$(FRONTEND_TARGET)
-	
+
 #Rensning
 clean:
 	find . -type f \( -name "*.o" -o -name "*.gcda" -o -name "*.gcno" -o -name "*.gcov" \) -delete
