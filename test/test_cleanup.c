@@ -12,6 +12,8 @@ void test_cleanup_unretained()
 
     // cleanup shouldn't free o, so running deallocate shouldn't cause an error
     deallocate(o);
+
+    shutdown();
 }
 
 // Test: objects with refcount > 0 should not be released with cleanup.
@@ -22,11 +24,16 @@ void test_cleanup_keeps_retained()
     CU_ASSERT_PTR_NOT_NULL(b);
 
     retain(a);
+    retain(b);
 
     cleanup();
     CU_ASSERT_EQUAL(rc(a), 1);
+    CU_ASSERT_EQUAL(rc(b), 1);
 
     release(a);
+    release(b);
+
+    shutdown();
 }
 
 // Test: ignores the cascade limit with cleanup.
@@ -58,8 +65,10 @@ void test_cleanup_cascade_limit()
 
     // should ignore limit
     cleanup();
-    
+
     set_cascade_limit(100); // set limit back to 100 between tests since its static memory
+
+    shutdown();
 }
 
 static int destroyed = 0;
@@ -89,6 +98,8 @@ void test_cleanup_calls_destructor(void)
     CU_ASSERT_EQUAL(destroyed, 1);
 
     set_cascade_limit(100); // set limit back to 100 between tests since its static memory
+
+    shutdown();
 }
 
 void test_shutdown_calls_destructor(void)
@@ -97,6 +108,7 @@ void test_shutdown_calls_destructor(void)
 
     obj *o = allocate(sizeof(int), test_destructor_cleanup);
     retain(o);
+    release(o);
 
     shutdown();
 
@@ -107,13 +119,13 @@ void test_shutdown_calls_destructor(void)
 
 void register_cleanup_shutdown_tests()
 {
-	CU_pSuite suite = CU_add_suite("cleanup_shutdown_tests", NULL, NULL);
-	if (suite != NULL)
-	{
-		CU_add_test(suite, "test cleanup frees unretained objects", test_cleanup_unretained);
+    CU_pSuite suite = CU_add_suite("cleanup_shutdown_tests", NULL, NULL);
+    if (suite != NULL)
+    {
+        CU_add_test(suite, "test cleanup frees unretained objects", test_cleanup_unretained);
         CU_add_test(suite, "test only cleans refcont == 0", test_cleanup_keeps_retained);
         CU_add_test(suite, "test ignores cascade limit", test_cleanup_cascade_limit);
         CU_add_test(suite, "test cleanup with destructor", test_cleanup_calls_destructor);
         CU_add_test(suite, "test shutdown with destructor", test_shutdown_calls_destructor);
-	}
+    }
 }

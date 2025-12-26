@@ -9,6 +9,7 @@ void test_rc_init_zero()
     CU_ASSERT_PTR_NOT_NULL(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 0);
     deallocate(allocation);
+    shutdown();
 }
 
 void test_rc_null()

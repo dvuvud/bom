@@ -10,6 +10,8 @@ void test_retain()
     retain(allocation);
     CU_ASSERT_EQUAL(rc(allocation), 1);
     release(allocation);
+
+    shutdown();
 }
 
 void test_release()
@@ -28,6 +30,8 @@ void test_release()
     CU_ASSERT_EQUAL(rc(allocation), 1);
 
     release(allocation);
+
+    shutdown();
 }
 
 void test_retain_release()
@@ -45,6 +49,8 @@ void test_retain_release()
     cleanup();
 
     set_cascade_limit(100);
+
+    shutdown();
 }
 
 void register_retain_release_tests()

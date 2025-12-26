@@ -14,11 +14,8 @@ typedef struct metadata {
     uint8_t refcount;         // objects can have a maximum of 255 references
     size_t size;              // size of user object
     function1_t destructor;   // destructor callback (may be NULL)
-    struct metadata *next;    // pointer to the next object's metadata struct
-    struct metadata *prev;    // pointer to the previous object's metadata struct
 } metadata_t;
 
-static metadata_t *object_list_head = NULL;
 static void default_destructor(obj *p);
 
 // Helper function to get metadata from user object
@@ -56,25 +53,13 @@ static void free_object(obj *p)
     // get metadata
     metadata_t *meta = meta_from_obj(p);
 
-    // Reassign the previos objects next meta link, or the head of the list
-    if (meta->prev) {
-        meta->prev->next = meta->next;
-    } else {
-        object_list_head = meta->next;
-    }
-
-    // Reassign the next objects prev meta link
-    if (meta->next) {
-        meta->next->prev = meta->prev;
-    }
-
     // call destructor if it exists
     if (meta->destructor != NULL) {
         meta->destructor(p);
-	}
+    }
     else { 
-		default_destructor(p);
-	}
+        default_destructor(p);
+    }
 
 
     hashset_remove(p);
@@ -98,15 +83,15 @@ void retain(obj *p)
     if (p == NULL) {
         return;
     }
-    
+
     // get metadata from object pointer
     metadata_t *meta = meta_from_obj(p);
-    
+
     if (meta->refcount == REFCOUNT_MAX) {
         // error! refcount overflows
         return;
     }
-    
+
     // decrease refcount
     meta->refcount++;
 }
@@ -155,16 +140,7 @@ obj *allocate(size_t bytes, function1_t destructor)
     obj *user_object = obj_from_meta(metadata);
     hashset_add(user_object);
 
-    metadata->next = object_list_head;
-    metadata->prev = NULL;
-
-    if (object_list_head != NULL) {
-        object_list_head->prev = metadata;
-    }
-
-    object_list_head = metadata;
-
-    return obj_from_meta(metadata);
+    return user_object;
 }
 
 // Allocates and null-initializes an array with `elements` number of elements of `elem_size` size
@@ -191,16 +167,7 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     obj *user_object = obj_from_meta(metadata);
     hashset_add(user_object);
 
-    metadata->next = object_list_head;
-    metadata->prev = NULL;
-
-    if (object_list_head != NULL) {
-        object_list_head->prev = metadata;
-    }
-
-    object_list_head = metadata;
-
-    return obj_from_meta(metadata);
+    return user_object;
 }
 
 // Sets the global cascade limit.
@@ -246,14 +213,8 @@ void cleanup()
 
 void shutdown()
 {
-    metadata_t *meta = object_list_head;
-    metadata_t *next;
-
-    while (meta != NULL) {
-        next = meta->next;
-        free_object(obj_from_meta(meta));
-        meta = next;
-    }
+    // Clear queue of cascading frees
+    cleanup();
 
     // only contains garbadge pointers at this point..
     queue_clear(&pending_frees);
@@ -264,26 +225,26 @@ void shutdown()
 // Default destructor
 static void default_destructor(obj *p)
 {
-	if (p == NULL) {
-		return;
-	}
+    if (p == NULL) {
+        return;
+    }
 
-	metadata_t *meta = meta_from_obj(p);
-	size_t object_size = meta->size;
+    metadata_t *meta = meta_from_obj(p);
+    size_t object_size = meta->size;
 
     void **cursor = (void **)p;
     void **end = (void **)((char *)p + object_size);
-	
-	// Scan object memory in pointer-sized
-	while (cursor < end) {
-		// Extract potential pointer at the current memory address
+
+    // Scan object memory in pointer-sized
+    while (cursor < end) {
+        // Extract potential pointer at the current memory address
         void *value = *cursor;
-		
-		// Skip null pointers
-		if (value != NULL && hashset_contains(value)) { 
-			release(value); 
-		}
+
+        // Skip null pointers
+        if (value != NULL && hashset_contains(value)) { 
+            release(value); 
+        }
 
         cursor++;
-	}
+    }
 }

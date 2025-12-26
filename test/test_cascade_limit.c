@@ -19,6 +19,8 @@ void test_cascade_limit_large_value()
 {
     set_cascade_limit(1000);
     CU_ASSERT_EQUAL(get_cascade_limit(), 1000);
+
+    set_cascade_limit(100);    // Make sure to always reset cascade limit in tests since its static and percists between them
 }
 
 

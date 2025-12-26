@@ -48,6 +48,8 @@ void test_default_destructor_no_pointers()
     release(s);
 
     // Object should be freed, no pointers to release
+
+    shutdown();
 }
 
 // Test default destructor with NULL pointer field
@@ -59,6 +61,8 @@ void test_default_destructor_null_pointer()
 
     retain(s);
     release(s);
+
+    shutdown();
 }
 
 // Test default destructor with valid pointer
@@ -83,6 +87,8 @@ void test_default_destructor_single_pointer()
 
     // Child's destructor should have been called
     CU_ASSERT_EQUAL(destructor_call_count, 1);
+
+    shutdown();
 }
 
 // Test default destructor with multiple pointers
@@ -116,6 +122,8 @@ void test_default_destructor_multiple_pointers()
 
     // All three children destructors should have been called
     CU_ASSERT_EQUAL(destructor_call_count, 3);
+
+    shutdown();
 }
 
 // Test default destructor doesn't release non-tracked addresses
@@ -129,6 +137,8 @@ void test_default_destructor_invalid_pointer()
 
     retain(s);
     release(s);
+
+    shutdown();
 }
 
 // Test default destructor with mixed valid and NULL pointers
@@ -151,9 +161,11 @@ void test_default_destructor_mixed_pointers()
     CU_ASSERT_EQUAL(rc(root), 1);
 
     release(root);
-    
+
     // Only left's destructor should be called
     CU_ASSERT_EQUAL(destructor_call_count, 1);
+
+    shutdown();
 }
 
 // Test default destructor with circular reference (requires custom destructor to break cycle)
@@ -184,6 +196,8 @@ void test_default_destructor_chain()
 
     // C's destructor should have been called
     CU_ASSERT_EQUAL(destructor_call_count, 1);
+
+    shutdown();
 }
 
 // Test default destructor doesn't interfere with custom destructor
@@ -204,6 +218,8 @@ void test_default_destructor_vs_custom()
 
     // Only custom destructor should have been called
     CU_ASSERT_EQUAL(destructor_call_count, 1);
+
+    shutdown();
 }
 
 // Test default destructor with array of pointers
@@ -233,6 +249,8 @@ void test_default_destructor_pointer_array()
 
     // Three objects should have their destructors called
     CU_ASSERT_EQUAL(destructor_call_count, 3);
+
+    shutdown();
 }
 
 void register_default_destructor_tests()
