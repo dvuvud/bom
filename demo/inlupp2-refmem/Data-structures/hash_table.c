@@ -48,9 +48,9 @@ static void entry_destroy(entry_t *entry, ioopm_eq_function *eq_fun) {
     if (entry->key.p != NULL) {
         release(entry->key.p);
     }
-    if (entry->value.p != NULL) {
-        release(entry->value.p);
-    }
+    // if (entry->value.p != NULL) {
+    //     release(entry->value.p);
+    // }
     deallocate(entry);
 }
 

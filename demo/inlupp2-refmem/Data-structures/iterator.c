@@ -11,8 +11,6 @@
 ioopm_list_iterator_t *ioopm_iterator_create(ioopm_list_t *list) {
     //creates an iterator and allocates memory for it
     ioopm_list_iterator_t *result = allocate(sizeof(struct iter), NULL);
-
-    retain(list);
     result->current = list->head->next;
     result->list = list;
     return result;
@@ -51,6 +49,5 @@ elem_t ioopm_iterator_current(ioopm_list_iterator_t *iter){
 void ioopm_iterator_destroy(ioopm_list_iterator_t *iter){
     if (!iter) return;
 
-    release(iter->list);
     release(iter);
 }
