@@ -32,10 +32,6 @@ bool str_eq(elem_t a, elem_t b);
 /// @return an empty linked list
 ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function *eq_fun);
 
-/// @brief Tear down the linked list and return all its memory (but not the memory of the elements)
-/// @param list the list to be destroyed
-void ioopm_linked_list_destroy(ioopm_list_t *list);
-
 /// @brief Insert at the end of a linked list in O(1) time
 /// @param list the linked list that will be appended
 /// @param value the value to be appended

@@ -40,6 +40,9 @@ static ioopm_link_t *link_create(elem_t value, ioopm_link_t *next)
     ioopm_link_t *link = allocate(sizeof(*link), NULL);
     assert(link);
 
+    retain(value.p);
+    retain(next);
+
     link->element = value;
     link->next    = next;
     return link;
@@ -83,6 +86,10 @@ ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function *eq_fun)
 
     list->head = link_create(int_elem(0), NULL);
     list->tail = list->head;   // if empty list: tail == head
+
+    retain(list->head);
+    retain(list->tail);
+
     list->size = 0;
 
     if (eq_fun != NULL)
@@ -97,21 +104,6 @@ ioopm_list_t *ioopm_linked_list_create(ioopm_eq_function *eq_fun)
     return list;
 }
 
-/// @brief Tear down the linked list and return all its memory (but not the memory of the elements)
-/// @param list the list to be destroyed
-void ioopm_linked_list_destroy(ioopm_list_t *list)
-{
-    if (!list)
-    return;
-
-   ioopm_linked_list_clear(list);
-
-    // Free list structur
-    deallocate(list->head);
-    release(list);
-}
-
-
 /// @brief Insert at the end of a linked list in O(1) time
 /// @param list the linked list that will be appended
 /// @param value the value to be appended
@@ -123,16 +115,15 @@ void ioopm_linked_list_append(ioopm_list_t *list, elem_t value)
     // make sure list is not NULL
     assert(list);
 
-    if (value.p != NULL) {
-        retain(value.p);
-    }
-
     // create a new link,tha placed at the end
     ioopm_link_t *new_link = link_create(value, NULL);
 
-    // Connect the new node after the current tail
+    retain(new_link); // One retain for becoming the old tail's next
+    retain(new_link); // One retain for becoming the new tail
+
     list->tail->next = new_link;
-    // let pointer poit to the nexts tail
+
+    release(list->tail);
     list->tail = new_link;
 
     list->size++;
@@ -146,17 +137,19 @@ void ioopm_linked_list_prepend(ioopm_list_t *list, elem_t value)
 {
     assert(list);
 
-    if (value.p != NULL) {
-        retain(value.p);
-    }
     // Create a new node and point to the current head
     ioopm_link_t *new_link = link_create(value, list->head->next);
 
+    release(list->head->next);
     list->head->next = new_link;
+    retain(new_link); // One retain for becoming the head's next
+    
     // empty list -> tail is sentinel
-    if( list->tail == list->head)
+    if (list->tail == list->head)
     {
+        release(list->tail);
         list->tail = new_link;
+        retain(new_link); // One retain for being the new tail
     }
     // Update the list size
     list->size++;
@@ -179,18 +172,20 @@ void ioopm_linked_list_insert(ioopm_list_t *list, size_t index, elem_t value)
     int valid_index = list_inner_adjust_index(index, (int)list->size + 1);
 
     ioopm_link_t *prev = list_inner_find_previous(list->head, (size_t)valid_index);
-
-    if (value.p != NULL) {
-        retain(value.p);
-    }
+    
     // create a new link
     ioopm_link_t *new_link = link_create(value, prev->next);
+
+    release(prev->next);
     prev->next = new_link;
+    retain(prev->next);
 
     // if we inserted at the end, update the tail
     if (new_link->next == NULL)
     {
-         list->tail = new_link;
+        release(list->tail);
+        list->tail = new_link;
+        retain(list->tail);
     }
     list->size++;
 }
@@ -215,15 +210,16 @@ elem_t ioopm_linked_list_remove(ioopm_list_t *list, size_t index)
 
     prev->next = to_remove->next;  // save value before freeing
     elem_t value = to_remove->element; // unlink it
-    if (value.p != NULL) {
-        release(value.p);
-    }
-    deallocate(to_remove); // free memory
+
+    retain(prev->next);
+    release(to_remove); // free memory
 
     // removed the last real node
     if (prev->next == NULL)
     {
+        release(list->tail);
         list->tail = prev;  // tail falls back
+        retain(list->tail);
     }
     // update size and return removed value
     list->size--;
@@ -299,15 +295,12 @@ void ioopm_linked_list_clear(ioopm_list_t *list)
     while (cursor) {
         ioopm_link_t *tmp = cursor;      // Remember current node
         cursor = cursor->next;    // Move forward
-
-        if (tmp->element.p != NULL) {
-            release(tmp->element.p);
-        }
-
-        deallocate(tmp); // Free node
+        retain(cursor);
+        release(tmp); // Free node
     }
     // reset sentinel pointers and size
     list->head->next = NULL;
+    release(list->tail); // Release the tail
     list->tail = list->head;
     list->size = 0;
 }

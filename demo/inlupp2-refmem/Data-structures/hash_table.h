@@ -52,10 +52,6 @@ int def_hash_function(elem_t key);
 /// @return A new empty hash table
 ioopm_hash_table_t *ioopm_hash_table_create(ioopm_hash_function *hf, ioopm_eq_function *eq_fun);
 
-/// @brief Delete a hash table and free its memory
-/// @param ht a hash table to be deleted
-void ioopm_hash_table_destroy(ioopm_hash_table_t *ht);
-
 /// @brief add key => value entry in hash table ht
 /// @param ht hash table operated upon
 /// @param key key to insert
