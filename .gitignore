@@ -59,6 +59,10 @@ docs/html
 
 # Other things
 *.fuse*
+.clangd
+*.gcno
+*.gcda
+*data_structure_tests
 
 # Build dirs
 docs/coverage*
