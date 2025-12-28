@@ -383,13 +383,10 @@ void test_insert_shelf_multiple()
 
     ioopm_merch_t *merch = ioopm_hash_table_lookup(warehouse, ptr_elem(name)).value.p;
     ioopm_shelf_t *shelf = create_shelf("A4", 5);
-    retain(shelf);
     ioopm_shelf_t *shelf2 = create_shelf("B5", 1);
-    retain(shelf);
     ioopm_shelf_t *shelf3 = create_shelf("A1", 3);
-    retain(shelf);
 
-    char **shelf_arr = calloc(3, sizeof(ioopm_shelf_t *));
+    char **shelf_arr = allocate_array(3, sizeof(ioopm_shelf_t *), NULL);
     shelf_arr[0] = "A1";
     shelf_arr[1] = "A4";
     shelf_arr[2] = "B5";

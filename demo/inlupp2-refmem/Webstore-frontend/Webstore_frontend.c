@@ -543,6 +543,7 @@ void event_loop(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, ioopm_carts_t 
         
             {
                 quit(wh, locs, carts);
+                shutdown();
                 free(option);
                 break;
             }
@@ -559,15 +560,11 @@ int main(int argc, char *argv[])
     ioopm_hash_table_t *locs = create_warehouse_hash();
     ioopm_carts_t *carts = create_carts();
 
-    retain(wh);
-    retain(locs);
-    retain(carts);
-
     event_loop(wh, locs, carts);
 
-    release(wh);
-    release(locs);
-    release(carts);
+    deallocate(wh);
+    deallocate(locs);
+    deallocate(carts);
     shutdown();
     return 0;
 }

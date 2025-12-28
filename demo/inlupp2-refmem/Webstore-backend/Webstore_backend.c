@@ -606,8 +606,8 @@ bool checkout_cart(ioopm_carts_t *carts, ioopm_hash_table_t *locs, int cart)
 
 bool quit(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, ioopm_carts_t *carts)
 {
-    release(wh);
-    release(locs);
-    release(carts);
+    deallocate(wh);
+    deallocate(locs);
+    deallocate(carts);
     return false;
 }
