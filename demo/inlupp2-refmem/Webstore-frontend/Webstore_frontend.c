@@ -6,9 +6,10 @@
 
 #include "../Data-structures/linked_list.h"
 #include "../Data-structures/hash_table.h"
-#include "../Data-structures/iterator.h"
 #include "../Webstore-backend/Webstore_backend.h"
 #include "../Utils/utils.h"
+
+#include <refmem.h>
 
 //----------- Helper functions ------------
 
@@ -28,13 +29,13 @@ bool is_shelf(char *shelf)
 ///Ask question that requires shelf input
 char *ask_question_shelf(char *question) 
 { 
-    return ask_question(question, is_shelf, (convert_func *) strdup).string_value;
+    return ask_question(question, is_shelf, (convert_func *) copy_string).string_value;
 } 
 
 ///Ask a yes/no confirmation question, default answer is given as 'y' or 'n'
 bool ask_confirmation(char *question, char default_answer) 
 {
-    char *answer = ask_question(question, NULL, (convert_func *) strdup).string_value;
+    char *answer = ask_question(question, NULL, (convert_func *) copy_string).string_value;
     
     if (tolower(answer[0]) == default_answer) 
     {
@@ -115,7 +116,7 @@ char *magick(char **array1, char **array2, char **array3, int size)
 
     snprintf(buf, sizeof(buf), "%s-%s %s", first, second, third);
 
-    return strdup(buf);
+    return copy_string(buf);
 }
 
 ///----------------------------------------------------------------------------------------
@@ -557,31 +558,16 @@ int main(int argc, char *argv[])
     ioopm_hash_table_t *wh = create_warehouse_hash();
     ioopm_hash_table_t *locs = create_warehouse_hash();
     ioopm_carts_t *carts = create_carts();
-  
-    // --- ADD RANDOM ITEMS FOR TESTING ---
 
-    // char *array1[] = {"Kokos", "Cola", "Muffins", "Banan", "Pizza", "Äppel", "Godis", "Redbull"};
-    // char *array2[] = {"Dadel", "Pudding", "Redbull", "Bröd", "Kaffe", "Juice", "sylt", "Mos"};
-    // char *array3[] = {"12-pack", "Sockerfri", "Extra socker", "Koffeinfri", "Torkad", "På burk", "Fryst", "På tub"};
-
-    // for (int i = 0; i < 21; ++i)
-    // {
-    //     char *name = magick(array1, array2, array3, 8);
-    //     char *desc = magick(array1, array2, array3, 8);
-    //     int price = random() % 200000;
-    //     char shelf[] = { random() % ('Z'-'A') + 'A',
-    //                       random() % 10 + '0',
-    //                       random() % 10 + '0',
-    //                       '\0' };
-    //     int quantity = random() % 100;
-    //     add_merchandise(wh, name, desc, price);
-    //     replenish_stock(wh, locs, name, shelf, quantity);
-    //     free(name);
-    //     free(desc);
-    // }
-
-    // ------------------------------------
+    retain(wh);
+    retain(locs);
+    retain(carts);
 
     event_loop(wh, locs, carts);
+
+    release(wh);
+    release(locs);
+    release(carts);
+    shutdown();
     return 0;
 }

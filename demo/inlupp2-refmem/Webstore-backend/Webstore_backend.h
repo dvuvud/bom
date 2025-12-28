@@ -71,19 +71,9 @@ struct cart_item
 /// @returns the new created merchandis
 ioopm_merch_t *create_merchandise(char *name, char *desc, int price);
 
-/// @brief free merchandise
-/// @param not_used not used
-/// @param value the merchandise to free
-/// @param extra not used
-void destroy_merch(elem_t not_used, elem_t value, void *extra);
-
 /// @brief create a new warehouse hashtable
 /// @returns the new created warehouse hashtable
 ioopm_hash_table_t *create_warehouse_hash();
-
-/// @brief destroy a warehouse hashtable
-/// @param wh the warehouse hashtable to destroy
-void destroy_warehouse_hash(ioopm_hash_table_t *wh);
 
 /// @brief create a new shelf
 /// @param shelf the name of the shelf, that need to be in the format LetterNumberNumber (e.g. A12)
@@ -137,10 +127,6 @@ bool replenish_stock(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, char *mer
 
 /// @brief creates a new empty system for carts
 ioopm_carts_t *create_carts();
-
-/// @brief destroys the carts
-/// @param carts the system of carts to destroy
-void destroy_carts(ioopm_carts_t *carts);
 
 /// @brief creates a new empty cart (a linked list) and adds it to the carts hash
 /// @param carts the system of created carts

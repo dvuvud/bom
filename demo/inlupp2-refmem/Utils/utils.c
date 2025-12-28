@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include "utils.h"
+
+#include <refmem.h>
 
 extern char *strdup(const char *);
 
@@ -15,6 +16,15 @@ extern char *strdup(const char *);
 //     char *string_value;
 // } answer_t;
 // typedef answer_t convert_func(char *);
+
+char *copy_string(const char *src)
+{
+    size_t len = strlen(src) + 1;
+    char *copy = allocate_array(len, sizeof(char), NULL);
+    memcpy(copy, src, len);
+    return copy;
+}
+
 
 bool is_number(char *str) 
 {

@@ -4,7 +4,7 @@
 
 #pragma once
 
-extern char *strdup(const char *);
+char *copy_string(const char *src);
 
 typedef bool check_func(char *);
 typedef union {

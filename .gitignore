@@ -63,6 +63,7 @@ docs/html
 *.gcno
 *.gcda
 *data_structure_tests
+*backend_tests
 
 # Build dirs
 docs/coverage*
