@@ -84,6 +84,10 @@ void retain(obj *p)
         return;
     }
 
+    if (!hashset_contains(p)) {
+        return;
+    }
+
     // get metadata from object pointer
     metadata_t *meta = meta_from_obj(p);
 
@@ -99,6 +103,10 @@ void retain(obj *p)
 void release(obj *p)
 {
     if (p == NULL) {
+        return;
+    }
+
+    if (!hashset_contains(p)) {
         return;
     }
 
