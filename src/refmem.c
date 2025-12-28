@@ -128,7 +128,7 @@ obj *allocate(size_t bytes, function1_t destructor)
 {
     metadata_t *metadata;
 
-    metadata = malloc(sizeof(metadata_t) + bytes);
+    metadata = calloc(1, sizeof(metadata_t) + bytes);
     if (metadata == NULL) {
         return NULL;
     }
@@ -231,6 +231,13 @@ static void default_destructor(obj *p)
 
     metadata_t *meta = meta_from_obj(p);
     size_t object_size = meta->size;
+    
+    // (-8) = 11111111111000
+    // We round down object_size to nearest multiple of ptr_t (8 bytes)
+    // so we don't access out of bounds.
+    // This is fine - if the last part is 4 bytes long (for example),
+    // then it can't be a pointer anyway!
+    object_size = object_size & (-8);
 
     void **cursor = (void **)p;
     void **end = (void **)((char *)p + object_size);
