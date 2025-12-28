@@ -1,13 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <refmem.h>
 
 #include "../Data-structures/linked_list.h"
 #include "../Data-structures/hash_table.h"
 #include "../Data-structures/iterator.h"
 #include "Webstore_backend.h"
 #include "../Utils/utils.h"
-#include "refmem.h"
+
 
 // -------------------------------------------
 //      Helper functions for the backend
@@ -441,7 +442,7 @@ bool replenish_stock(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, char *mer
 
 ioopm_carts_t *create_carts()
 {
-    ioopm_carts_t *carts = allocate(sizeof(ioopm_carts_t), NULL);
+    ioopm_carts_t *carts = allocate_array(1, sizeof(ioopm_carts_t), NULL);
 
     ioopm_hash_table_t *ht = ioopm_hash_table_create(NULL, NULL);
     retain(ht);

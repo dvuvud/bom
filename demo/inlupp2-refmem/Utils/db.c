@@ -3,10 +3,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <ctype.h>
+
 #include "utils.h"
-
-//gcc -Wall utils.c db.c
-
+#include "../../src/include/refmem.h"
 
 void print_item(item_t *product)
 {
@@ -15,23 +14,36 @@ void print_item(item_t *product)
     printf("Price:\t%d SEK\n", product -> price / 100);
     printf("Shelf:\t%s\n\n", product -> shelf);
 }
-
-item_t make_item(char *name1, char *desc1, int price1, char *shelf1)
+// Skap
+item_t make_item(char *name, char *desc, int price, char *shelf)
 {
-    item_t prod = { .name = name1, .desc = desc1, .price = price1, .shelf = shelf1};
-    print_item(&prod);
+    item_t prod = {
+        .name = name,
+        .desc = desc,
+        .price = price,
+        .shelf = shelf,
+    };
     return prod;
 }
-
+// Läs in varor
 item_t input_item()
 {
-    char *name2 = ask_question_string("Name of product?");
-    char *desc2 = ask_question_string("Description?");
-    int price2 = ask_question_int("Price (in öre)?");
-    char *shelf2 = ask_question_shelf("Which shelf?");
-  
-    return make_item(name2, desc2, price2, shelf2);
+    char *name = ask_question_string("Name of product?");
+    retain(name); // Spara i databas
+
+    char *desc = ask_question_string("Description?");
+    retain(desc);
+
+    int price = ask_question_int("Price (in öre)?");
+
+    char *shelf = ask_question_shelf("Which shelf?");
+    retain(shelf);
+
+    return make_item(name, desc, price, shelf);
 }
+//-----------------------------------------------------
+// Database functions
+//-----------------------------------------------------
 
 void list_db(item_t *items, int no_items)
 {
@@ -40,55 +52,14 @@ void list_db(item_t *items, int no_items)
     printf("%d.  %s\n", i + 1, items[i].name);
   }
   printf("\n");
-
-}
-
-void edit_db(item_t *items, int no_items)
-{
-  
-    int num_prod;
-  
-    do
-    {
-        num_prod = ask_question_int("Which item do you want to edit?\n");
-        if(num_prod < 1|| num_prod > no_items)
-        {
-          printf("Invalid index\n");
-          
-        }
-    } while (num_prod < 1|| num_prod > no_items);
-    
-  
-    print_item(&items[num_prod - 1]);
-    item_t edited_item = input_item();
-    items[num_prod - 1] = edited_item;
-    printf("Item has been updated.\n");
-    list_db(items, no_items);
-    
-
-  }
-
-
-void print_menu()
-{
-  char *menu = "[L]ägga till en vara\n"
-               "[T]a bort en vara\n"
-               "[R]edigera en vara\n"
-               "Ån[g]ra senaste ändringen\n"
-               "Lista [h]ela varukatalogen\n"
-               "[A]vsluta\n\n";
-
-  printf("%s", menu);
-
 }
 
 void add_item_to_db(item_t *items, int *no_items)
 {
   item_t new_item = input_item();
   items[*no_items] = new_item;
-  *no_items += 1; //gå till addressen, hämta värdet och öka med ett
+  (*no_items)++; //gå till addressen, hämta värdet och öka med ett
   list_db(items, *no_items);
-  //return new_item;
 }
 
 void remove_item_from_db(item_t *items, int *no_items)
@@ -96,149 +67,111 @@ void remove_item_from_db(item_t *items, int *no_items)
   int num_prod;
   list_db(items, *no_items);
   
-    do
+  do
     {
-        num_prod = ask_question_int("Which item do you want to remove?\n");
-  
-        if(num_prod < 1|| num_prod > *no_items)
-        {
-          printf("Invalid index\n");
-          
-        }
-    } while (num_prod < 1|| num_prod > *no_items);
-    
-  
-    print_item(&items[num_prod - 1]);
-    *no_items -= 1;
-    printf("Item has been updated.\n");
+      num_prod = ask_question_int("Which item do you want to remove?\n");
 
-    for(int i = num_prod - 1; i < *no_items; ++i)
+    }
+
+    while (num_prod < 1|| num_prod > *no_items);
+
+    item_t *item = &items[num_prod - 1];
+
+    // Frigör minnet för strängarna i varan
+    release(item->name);
+    release(item->desc);
+    release(item->shelf);
+
+    for(int i = num_prod - 1; i < *no_items - 1; ++i)
     {
       items[i] = items[i + 1];
     }
     
-    list_db(items, *no_items);
-    
+    (*no_items)--; // Minska antal varor i databasen
 }
 
-void event_loop(item_t *items, int *no_items) // no_items är en pekare till int, pekaren innehåller addressen till db_siz
+void edit_db(item_t *items, int no_items)
 {
-  //item_t *items;
-  //int no_items;
-
-  printf("\n");
- 
-  char *action = ask_question_menu("[L]ägga till en vara\n"
-                                   "[T]a bort en vara\n"
-                                   "[R]edigera en vara\n"
-                                   "Ån[g]ra senaste ändringen\n"
-                                   "Lista [h]ela varukatalogen\n"
-                                   "[A]vsluta\n\n");
-
-  printf("Your choice: %s\n", action);
-
-
-  if(action[0] == 'L')
-  {
-    add_item_to_db(items, no_items);
-    event_loop(items, no_items);
-  }
-  else if(action[0] == 'T')
-  {
-    remove_item_from_db(items, no_items); //skicka pekaren
-    event_loop(items, no_items);
-  }
-  else if(action[0] == 'R')
-  {
-    edit_db(items, *no_items);
-    event_loop(items, no_items);
-
-  }
-  else if(action[0] == 'G')
-  {
-    printf("Not yet implemented!\n");
-    event_loop(items, no_items);
-  }
-  else if(action[0] == 'H')
-  {
-    for (int i = 0; i < *no_items; ++i)
-     {
-       print_item(&items[i]);
-     }
-
-    event_loop(items, no_items);
-  }
-  else if(action[0] == 'A')
-  {
-     return;
-  }
-
+  int num_prod;
   
+  do
+  {
+    num_prod = ask_question_int("Which item do you want to edit?\n");
+  }
+
+  while (num_prod < 1|| num_prod > no_items);
+  
+  item_t *old = &items[num_prod - 1];
+
+  release(old->name);
+  release(old->desc);
+  release(old->shelf);
+
+  item_t edited_item = input_item();
+  items[num_prod - 1] = edited_item;
+
+  printf("Item has been updated.\n");
 }
 
-int main(int argc, char *argv[])
+// Event loop för databasen
+void event_loop(item_t *items, int *no_items)
 {
-  char *array1[] = {"Laser", "Polka", "Extra" }; // TODO: Lägg till!
-  char *array2[] = { "förnicklad", "smakande", "ordinär" }; // TODO: Lägg till!
-  char *array3[] = { "skruvdragare", "kola", "uppgift" }; // TODO: Lägg till!
-
-  int array_len = sizeof(array1) / sizeof(array1[0]);
-
-  if (argc != 1)
-  {
-    printf("Usage: %s", argv[0]);
-  }
-  else
-  {
-    item_t db[16]; // Array med plats för 16 varor
-    int db_siz = 0; // Antalet varor i arrayen just nu
-/*
-    int items = atoi(argv[1]); // Antalet varor som skall skapas
-
-    if (items > 0 && items <= 16)
+    while (true)
     {
-      for (int i = 0; i < items; ++i)
-      {
-        // Läs in en vara, lägg till den i arrayen, öka storleksräknaren
-        item_t item = input_item();
-        db[db_siz] = item;
-        ++db_siz;
-      }
+        char *action = ask_question_string
+        (
+            "[L] Add item\n"
+            "[T] Remove item\n"
+            "[R] Edit item\n"
+            "[H] List all\n"
+            "[A] Exit\n"
+        );
+
+        switch (toupper(action[0]))
+        {
+            case 'L':
+                add_item_to_db(items, no_items);
+                break;
+
+            case 'T':
+                remove_item_from_db(items, no_items);
+                break;
+
+            case 'R':
+                edit_db(items, *no_items);
+                break;
+
+            case 'H':
+                for (int i = 0; i < *no_items; ++i)
+                {
+                    print_item(&items[i]);
+                }
+                break;
+
+            case 'A':
+                release(action);
+                return;
+        }
+
+        release(action); 
     }
-    else
+}
+
+int main(void)
+{
+    item_t db[16];
+    int db_size = 0;
+
+    event_loop(db, &db_size);
+
+    // Frigör minnet för alla varor i databasen innan avslut
+    for (int i = 0; i < db_size; ++i)
     {
-     // puts("Sorry, must have [1-16] items in database.");
-      return 1; // Avslutar programmet!
-    }*/
+        release(db[i].name);
+        release(db[i].desc);
+        release(db[i].shelf);
+    }
 
-    for (int i = db_siz; i < 16; ++i)
-      {
-        char *name = magick(array1, array2, array3, array_len); // TODO: Lägg till storlek
-        char *desc = magick(array1, array2, array3, array_len); // TODO: Lägg till storlek
-        int price = random() % 200000;
-        char shelf[] = { random() % ('Z'-'A') + 'A',
-                         random() % 10 + '0',
-                         random() % 10 + '0',
-                         '\0' };
-        item_t item = make_item(name, desc, price, strdup(shelf));
-
-        db[db_siz] = item;
-        ++db_siz;
-      }
-
-     // Skriv ut innehållet
-    event_loop(db, &db_siz); //adressen där värdet på db_siz finns
-    
-     //list_db(db, db_siz);
-     //edit_db(db, db_siz);
-/*
-     for (int i = 0; i < db_siz; ++i)
-     {
-       print_item(&db[i]);
-     }
-  */
-  }
-
- 
-  return 0;
+    shutdown();  // stänger refmem 
+    return 0;
 }

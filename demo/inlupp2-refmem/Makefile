@@ -102,4 +102,3 @@ run: $(FRONTEND_TARGET)
 clean:
 	find . -type f \( -name "*.o" -o -name "*.gcda" -o -name "*.gcno" -o -name "*.gcov" \) -delete
 	rm -f $(TARGET) $(TEST_TARGET) $(FRONTEND_TARGET) $(DATA_TEST_TARGET)
-
