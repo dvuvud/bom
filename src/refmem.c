@@ -197,6 +197,10 @@ void deallocate(obj *p)
         return;
     }
 
+    if (!hashset_contains(p)) {
+        return;
+    }
+
     metadata_t *meta;
 
     meta = meta_from_obj(p);
