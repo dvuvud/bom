@@ -2,7 +2,7 @@
 #include "../src/include/refmem.h"
 
 // Tests set & get.
-void test_set_get_cascade_limit() 
+void test_set_get_cascade_limit(void) 
 {
     set_cascade_limit(50);
     CU_ASSERT_EQUAL(get_cascade_limit(), 50);
@@ -15,7 +15,7 @@ void test_set_get_cascade_limit()
 }
 
 // Test to ensure large values are handled correctly.
-void test_cascade_limit_large_value() 
+void test_cascade_limit_large_value(void) 
 {
     set_cascade_limit(1000);
     CU_ASSERT_EQUAL(get_cascade_limit(), 1000);
@@ -24,7 +24,7 @@ void test_cascade_limit_large_value()
 }
 
 
-void register_cascade_limit_tests() 
+void register_cascade_limit_tests(void) 
 {
     CU_pSuite suite = CU_add_suite("Cascade_Limit_Tests", NULL, NULL);
     if (suite != NULL) 

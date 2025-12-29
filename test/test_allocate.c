@@ -3,7 +3,7 @@
 #include "../src/include/refmem.h"
 #include <stdlib.h>
 
-void test_allocate_basic()
+void test_allocate_basic(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -11,7 +11,7 @@ void test_allocate_basic()
     shutdown();
 }
 
-void test_allocate_write_read()
+void test_allocate_write_read(void)
 {
     int *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -21,7 +21,7 @@ void test_allocate_write_read()
     shutdown();
 }
 
-void test_allocate_null_destructor()
+void test_allocate_null_destructor(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -29,7 +29,7 @@ void test_allocate_null_destructor()
     shutdown();
 }
 
-void test_allocate_huge()
+void test_allocate_huge(void)
 {
     size_t big_count = (((size_t) 1)<<38) - 1;
     
@@ -39,7 +39,7 @@ void test_allocate_huge()
     shutdown();
 }
 
-void register_allocate_tests()
+void register_allocate_tests(void)
 {
     CU_pSuite suite = CU_add_suite("allocate()", 0, 0);
 

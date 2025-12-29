@@ -3,7 +3,7 @@
 #include "../src/include/refmem.h"
 #include <stdlib.h>
 
-void test_allocate_array_basic()
+void test_allocate_array_basic(void)
 {
     int *allocation = allocate_array(5, sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -13,7 +13,7 @@ void test_allocate_array_basic()
     shutdown();
 }
 
-void test_allocate_array_zero()
+void test_allocate_array_zero(void)
 {
     int *allocation = allocate_array(0, sizeof(int), NULL);
     CU_ASSERT_PTR_NULL(allocation);
@@ -23,7 +23,7 @@ void test_allocate_array_zero()
     shutdown();
 }
 
-void test_allocate_array_zero_size()
+void test_allocate_array_zero_size(void)
 {
     int *allocation = allocate_array(5, 0, NULL);
     CU_ASSERT_PTR_NULL(allocation);
@@ -34,7 +34,7 @@ void test_allocate_array_zero_size()
     shutdown();
 }
 
-void test_allocate_array_zero_init()
+void test_allocate_array_zero_init(void)
 {
     int *allocation = allocate_array(5, sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -48,7 +48,7 @@ void test_allocate_array_zero_init()
     shutdown();
 }
 
-void test_allocate_array_ptr()
+void test_allocate_array_ptr(void)
 {
     char **allocation = allocate_array(5, sizeof(char *), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -62,7 +62,7 @@ void test_allocate_array_ptr()
     shutdown();
 }
 
-void test_allocate_array_ptr_obj()
+void test_allocate_array_ptr_obj(void)
 {
     obj **allocation = allocate_array(5, sizeof(obj *), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -76,7 +76,7 @@ void test_allocate_array_ptr_obj()
     shutdown();
 }
 
-void test_allocate_array_huge()
+void test_allocate_array_huge(void)
 {
     size_t big_count = (((size_t) 1)<<38) - 1;
     int half_count = 1<<19;
@@ -93,7 +93,7 @@ void test_allocate_array_huge()
     shutdown();
 }
 
-void register_array_allocation_tests()
+void register_array_allocation_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Allocate_array", 0, 0);
     CU_add_test(suite, "test allocate_array", test_allocate_array_basic);

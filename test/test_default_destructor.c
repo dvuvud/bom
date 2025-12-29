@@ -30,13 +30,13 @@ void counting_destructor(obj *p)
     destructor_call_count++;
 }
 
-void reset_destructor_count()
+void reset_destructor_count(void)
 {
     destructor_call_count = 0;
 }
 
 // Test default destructor with object containing no pointers
-void test_default_destructor_no_pointers()
+void test_default_destructor_no_pointers(void)
 {
     simple_t *s = allocate(sizeof(simple_t), NULL);
     s->value = 42;
@@ -53,7 +53,7 @@ void test_default_destructor_no_pointers()
 }
 
 // Test default destructor with NULL pointer field
-void test_default_destructor_null_pointer()
+void test_default_destructor_null_pointer(void)
 {
     single_ptr_t *s = allocate(sizeof(single_ptr_t), NULL);
     s->next = NULL;
@@ -66,7 +66,7 @@ void test_default_destructor_null_pointer()
 }
 
 // Test default destructor with valid pointer
-void test_default_destructor_single_pointer()
+void test_default_destructor_single_pointer(void)
 {
     reset_destructor_count();
 
@@ -92,7 +92,7 @@ void test_default_destructor_single_pointer()
 }
 
 // Test default destructor with multiple pointers
-void test_default_destructor_multiple_pointers()
+void test_default_destructor_multiple_pointers(void)
 {
     reset_destructor_count();
 
@@ -127,7 +127,7 @@ void test_default_destructor_multiple_pointers()
 }
 
 // Test default destructor doesn't release non-tracked addresses
-void test_default_destructor_invalid_pointer()
+void test_default_destructor_invalid_pointer(void)
 {
     single_ptr_t *s = allocate(sizeof(single_ptr_t), NULL);
 
@@ -142,7 +142,7 @@ void test_default_destructor_invalid_pointer()
 }
 
 // Test default destructor with mixed valid and NULL pointers
-void test_default_destructor_mixed_pointers()
+void test_default_destructor_mixed_pointers(void)
 {
     reset_destructor_count();
 
@@ -169,7 +169,7 @@ void test_default_destructor_mixed_pointers()
 }
 
 // Test default destructor with circular reference (requires custom destructor to break cycle)
-void test_default_destructor_chain()
+void test_default_destructor_chain(void)
 {
     reset_destructor_count();
 
@@ -201,7 +201,7 @@ void test_default_destructor_chain()
 }
 
 // Test default destructor doesn't interfere with custom destructor
-void test_default_destructor_vs_custom()
+void test_default_destructor_vs_custom(void)
 {
     reset_destructor_count();
 
@@ -223,7 +223,7 @@ void test_default_destructor_vs_custom()
 }
 
 // Test default destructor with array of pointers
-void test_default_destructor_pointer_array()
+void test_default_destructor_pointer_array(void)
 {
     reset_destructor_count();
 
@@ -253,7 +253,7 @@ void test_default_destructor_pointer_array()
     shutdown();
 }
 
-void register_default_destructor_tests()
+void register_default_destructor_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Default_Destructor_Tests", NULL, NULL);
     if (suite != NULL)
