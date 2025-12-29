@@ -128,7 +128,7 @@ obj *allocate(size_t bytes, function1_t destructor)
 {
     metadata_t *metadata;
 
-    metadata = malloc(sizeof(metadata_t) + bytes);
+    metadata = calloc(1, sizeof(metadata_t) + bytes);
     if (metadata == NULL) {
         return NULL;
     }
@@ -231,6 +231,8 @@ static void default_destructor(obj *p)
 
     metadata_t *meta = meta_from_obj(p);
     size_t object_size = meta->size;
+    
+    object_size = object_size & (-8);
 
     void **cursor = (void **)p;
     void **end = (void **)((char *)p + object_size);
@@ -241,7 +243,7 @@ static void default_destructor(obj *p)
         void *value = *cursor;
 
         // Skip null pointers
-        if (value != NULL && hashset_contains(value)) { 
+        if (hashset_contains(value)) { 
             release(value); 
         }
 
