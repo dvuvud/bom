@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential cmake valgrind
+        sudo apt-get install -y build-essential valgrind libcunit1 libcunit1-dev
 
     - name: Build
       run: make all
