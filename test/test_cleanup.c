@@ -2,7 +2,7 @@
 #include "../src/include/refmem.h"
 
 // Test: cleanup on unretained objects.
-void test_cleanup_unretained()
+void test_cleanup_unretained(void)
 {
     obj *o = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(o);
@@ -17,7 +17,7 @@ void test_cleanup_unretained()
 }
 
 // Test: objects with refcount > 0 should not be released with cleanup.
-void test_cleanup_keeps_retained()
+void test_cleanup_keeps_retained(void)
 {
     obj *a = allocate(sizeof(int), NULL);
     obj *b = allocate(sizeof(int), NULL);
@@ -37,7 +37,7 @@ void test_cleanup_keeps_retained()
 }
 
 // Test: ignores the cascade limit with cleanup.
-void test_cleanup_cascade_limit()
+void test_cleanup_cascade_limit(void)
 {
     set_cascade_limit(0);
 
@@ -117,7 +117,7 @@ void test_shutdown_calls_destructor(void)
 
 
 
-void register_cleanup_shutdown_tests()
+void register_cleanup_shutdown_tests(void)
 {
     CU_pSuite suite = CU_add_suite("cleanup_shutdown_tests", NULL, NULL);
     if (suite != NULL)

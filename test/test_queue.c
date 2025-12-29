@@ -8,7 +8,7 @@ struct queue_node
     struct queue_node *next;
 };
 
-void test_queue_basic_operations()
+void test_queue_basic_operations(void)
 {
     queue_t q = { .head = NULL, .tail = NULL, .count = 0 };
 
@@ -36,7 +36,7 @@ void test_queue_basic_operations()
     queue_clear(&q);
 }
 
-void test_queue_clear()
+void test_queue_clear(void)
 {
     queue_t q = { NULL, NULL, 0 };
     int dummy = 42;
@@ -51,7 +51,7 @@ void test_queue_clear()
     CU_ASSERT_PTR_NULL(q.head);
 }
 
-void test_queue_pop_empty()
+void test_queue_pop_empty(void)
 {
     queue_t q = { NULL, NULL, 0 };
     CU_ASSERT_PTR_NULL(queue_pop(&q));

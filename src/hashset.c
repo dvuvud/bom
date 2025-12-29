@@ -100,7 +100,7 @@ void hashset_remove(void *addr)
     }
 }
 
-void hashset_cleanup()
+void hashset_cleanup(void)
 {
     if (addr_set.buckets == NULL) {
         return;

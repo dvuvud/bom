@@ -10,13 +10,13 @@ void test_destructor(obj *p)
     destructor_calls++;
 }
 
-void test_deallocate_null()
+void test_deallocate_null(void)
 {
     deallocate(NULL);
     CU_ASSERT_TRUE(1); // nothing happens
 }
 
-void test_deallocate_calls_destructor()
+void test_deallocate_calls_destructor(void)
 {
     destructor_calls = 0;
 
@@ -31,7 +31,7 @@ void test_deallocate_calls_destructor()
     shutdown();
 }
 
-void test_deallocate_with_rc_zero()
+void test_deallocate_with_rc_zero(void)
 {
     obj *p = allocate_array(1, sizeof(int), NULL);
     CU_ASSERT_EQUAL(rc(p), 0);
@@ -42,7 +42,7 @@ void test_deallocate_with_rc_zero()
     shutdown();
 }
 
-void test_deallocate_with_rc_not_zero()
+void test_deallocate_with_rc_not_zero(void)
 {
     destructor_calls = 0;
 
@@ -58,7 +58,7 @@ void test_deallocate_with_rc_not_zero()
     shutdown();
 }
 
-void register_deallocate_tests()
+void register_deallocate_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Deallocate", NULL, NULL);
     CU_add_test(suite, "test if deallocate input NULL is safe", test_deallocate_null);

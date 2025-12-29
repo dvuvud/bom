@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 // Test basic add and contains
-void test_hashset_add_contains()
+void test_hashset_add_contains(void)
 {
     // Clean state
     hashset_cleanup();
@@ -29,7 +29,7 @@ void test_hashset_add_contains()
 }
 
 // Test adding NULL
-void test_hashset_add_null()
+void test_hashset_add_null(void)
 {
     hashset_cleanup();
 
@@ -40,7 +40,7 @@ void test_hashset_add_null()
 }
 
 // Test contains on NULL
-void test_hashset_contains_null()
+void test_hashset_contains_null(void)
 {
     hashset_cleanup();
 
@@ -50,7 +50,7 @@ void test_hashset_contains_null()
 }
 
 // Test remove functionality
-void test_hashset_remove()
+void test_hashset_remove(void)
 {
     hashset_cleanup();
 
@@ -79,7 +79,7 @@ void test_hashset_remove()
 }
 
 // Test removing NULL
-void test_hashset_remove_null()
+void test_hashset_remove_null(void)
 {
     hashset_cleanup();
 
@@ -90,7 +90,7 @@ void test_hashset_remove_null()
 }
 
 // Test removing non-existent address
-void test_hashset_remove_nonexistent()
+void test_hashset_remove_nonexistent(void)
 {
     hashset_cleanup();
 
@@ -109,7 +109,7 @@ void test_hashset_remove_nonexistent()
 }
 
 // Test duplicate adds
-void test_hashset_duplicate_add()
+void test_hashset_duplicate_add(void)
 {
     hashset_cleanup();
 
@@ -129,7 +129,7 @@ void test_hashset_duplicate_add()
 }
 
 // Test many addresses
-void test_hashset_many_addresses()
+void test_hashset_many_addresses(void)
 {
     hashset_cleanup();
 
@@ -165,7 +165,7 @@ void test_hashset_many_addresses()
 }
 
 // Test cleanup
-void test_hashset_cleanup()
+void test_hashset_cleanup(void)
 {
     hashset_cleanup();
 
@@ -186,7 +186,7 @@ void test_hashset_cleanup()
 }
 
 // Test that hashset can be reused after cleanup
-void test_hashset_reuse_after_cleanup()
+void test_hashset_reuse_after_cleanup(void)
 {
     hashset_cleanup();
 
@@ -207,7 +207,7 @@ void test_hashset_reuse_after_cleanup()
 }
 
 // Test hash collisions
-void test_hashset_collisions()
+void test_hashset_collisions(void)
 {
     hashset_cleanup();
 
@@ -235,7 +235,7 @@ void test_hashset_collisions()
     hashset_cleanup();
 }
 
-void register_hashset_tests()
+void register_hashset_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Hashset_Tests", NULL, NULL);
     if (suite != NULL)

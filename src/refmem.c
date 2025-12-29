@@ -67,7 +67,7 @@ static void free_object(obj *p)
     free(meta);
 }
 
-static void process_pending_frees()
+static void process_pending_frees(void)
 {
     // free objects
     size_t i = 0;
@@ -202,7 +202,7 @@ void deallocate(obj *p)
     process_pending_frees();
 }
 
-void cleanup()
+void cleanup(void)
 {
     while (pending_frees.count > 0) {
         obj *garbage = queue_pop(&pending_frees);
@@ -211,7 +211,7 @@ void cleanup()
 
 }
 
-void shutdown()
+void shutdown(void)
 {
     // Clear queue of cascading frees
     cleanup();

@@ -3,7 +3,7 @@
 #include "../src/include/refmem.h"
 #include <stdlib.h>
 
-void test_retain()
+void test_retain(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
 
@@ -14,7 +14,7 @@ void test_retain()
     shutdown();
 }
 
-void test_release()
+void test_release(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
 
@@ -34,7 +34,7 @@ void test_release()
     shutdown();
 }
 
-void test_retain_release()
+void test_retain_release(void)
 {
     set_cascade_limit(0);
 
@@ -53,14 +53,14 @@ void test_retain_release()
     shutdown();
 }
 
-void test_retain_release_null()
+void test_retain_release_null(void)
 {
     retain(NULL);
     release(NULL);
 }
 
 // test release on zero refcount
-void test_release_zero()
+void test_release_zero(void)
 {
     set_cascade_limit(0);
     
@@ -81,7 +81,7 @@ void test_release_zero()
 }
 
 // more retain() than possible should do nothing
-void test_retain_past_limit()
+void test_retain_past_limit(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
     
@@ -114,7 +114,7 @@ void test_retain_past_limit()
     shutdown();
 }
 
-void register_retain_release_tests()
+void register_retain_release_tests(void)
 {
     CU_pSuite suite = CU_add_suite("retain & release", 0, 0);
     CU_add_test(suite, "test retain", test_retain);

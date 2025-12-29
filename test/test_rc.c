@@ -3,7 +3,7 @@
 #include "../src/include/refmem.h"
 #include <stdlib.h>
 
-void test_rc_init_zero()
+void test_rc_init_zero(void)
 {
     obj *allocation = allocate(sizeof(int), NULL);
     CU_ASSERT_PTR_NOT_NULL(allocation);
@@ -12,12 +12,12 @@ void test_rc_init_zero()
     shutdown();
 }
 
-void test_rc_null()
+void test_rc_null(void)
 {
     CU_ASSERT_EQUAL(rc(NULL), 0);
 }
 
-void register_rc_tests()
+void register_rc_tests(void)
 {
     CU_pSuite suite = CU_add_suite("rc()", 0, 0);
     CU_add_test(suite, "test rc initial is zero", test_rc_init_zero);
