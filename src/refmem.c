@@ -3,6 +3,8 @@
 #include "include/hashset.h"
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 #define REFCOUNT_MAX 255
 
@@ -259,4 +261,24 @@ static void default_destructor(obj *p)
 
         cursor++;
     }
+}
+
+// Duplicates a string using reference counted memory
+char *refmem_strdup(const char *src)
+{
+    if (src == NULL) 
+    {
+        return NULL;
+    }
+
+    size_t len = strlen(src) + 1;  // +1 for null terminator
+    char *dest = (char *)allocate(len, NULL);
+
+    if (dest == NULL) 
+    {
+        return NULL;
+    }
+
+    memcpy(dest, src, len);
+    return dest;
 }

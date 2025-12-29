@@ -141,3 +141,14 @@ void cleanup();
  * @note Should be called at the end of the program to ensure there are not internal memory leaks coming from the library itself.
  */
 void shutdown();
+
+/**
+* @brief Duplicates a string using reference counted memory
+*
+* The returned string has an initial reference count of 0 and must be
+* retained by the caller if it is stored.
+*
+* @param src The source string to duplicate
+* @return char* Pointer to the duplicated string
+*/
+char *refmem_strdup(const char *src);
