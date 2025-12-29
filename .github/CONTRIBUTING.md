@@ -9,9 +9,9 @@
 * Alla nya features, bugfixar, förbättringar etc. ska utvecklas i egna branches.
 * Namngivning sker enligt formatet:
 
-  * `feature/namn-pa-feature`
-  * `bugfix/namn-pa-bugfix`
-  * `hotfix/namn-pa-hotfix`
+  * `feature/namn-på-feature`
+  * `bugfix/namn-på-bugfix`
+  * `hotfix/namn-på-hotfix`
 
 ## Dokumentationsstil (.h filer)
 
