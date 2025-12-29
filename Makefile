@@ -1,6 +1,7 @@
 # ------- Kompilator och flaggor ---------
 CC      = gcc
-CFLAGS  = -Wall -pedantic -g -Isrc/include
+CFLAGS  = -Wall -pedantic -g -Isrc/include -I/opt/homebrew/include
+LDFLAGS = -L/opt/homebrew/lib
 CUNIT   = -lcunit
 COVERAGE_FLAGS = --coverage -o0
 
