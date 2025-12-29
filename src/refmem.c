@@ -232,11 +232,6 @@ static void default_destructor(obj *p)
     metadata_t *meta = meta_from_obj(p);
     size_t object_size = meta->size;
     
-    // (-8) = 11111111111000
-    // We round down object_size to nearest multiple of ptr_t (8 bytes)
-    // so we don't access out of bounds.
-    // This is fine - if the last part is 4 bytes long (for example),
-    // then it can't be a pointer anyway!
     object_size = object_size & (-8);
 
     void **cursor = (void **)p;
@@ -248,7 +243,7 @@ static void default_destructor(obj *p)
         void *value = *cursor;
 
         // Skip null pointers
-        if (value != NULL && hashset_contains(value)) { 
+        if (hashset_contains(value)) { 
             release(value); 
         }
 
