@@ -34,6 +34,7 @@ char *ask_question_shelf(char *question)
 bool ask_confirmation(char *question, char default_answer) 
 {
     char *answer = ask_question(question, NULL, convert_to_string).string_value;
+    retain(answer);
     bool result = (tolower(answer[0]) == default_answer);
     release(answer);
     return result;
@@ -101,11 +102,11 @@ char *magick(char **array1, char **array2, char **array3, int size)
 {
     char buf[255];
     snprintf(buf, sizeof(buf), "%s-%s %s",
-             array1[rand() % size],
-             array2[rand() % size],
-             array3[rand() % size]);
+            array1[rand() % size],
+            array2[rand() % size],
+            array3[rand() % size]);
 
-    return copy_string(buf);
+    return refmem_strdup(buf);
 }
 
 ///----------------------------------------------------------------------------------------
@@ -118,6 +119,7 @@ void action_add_merch(ioopm_hash_table_t *wh)
 {
     puts("Insert item details:");
     char *name = ask_question_string("Name: ");
+    retain(name);
 
     // Check if merchandise name already exists
     while (ioopm_hash_table_lookup(wh, ptr_elem(name)).success)
@@ -125,9 +127,11 @@ void action_add_merch(ioopm_hash_table_t *wh)
         puts("Name already exists, choose another\n");
         release(name);
         name = ask_question_string("Name: ");
+        retain(name);
     }
 
     char *desc = ask_question_string("Description: ");
+    retain(desc);
     int price = ask_question_int("Price (öre): ");
 
     add_merchandise(wh, name, desc, price);
@@ -142,6 +146,7 @@ void action_add_merch(ioopm_hash_table_t *wh)
 void action_list_merch(ioopm_hash_table_t *wh) 
 {
     char **all_merch = list_merchandise(wh);
+    retain(all_merch);
     int no_merch = ioopm_hash_table_size(wh);
     int x = 20;
 
@@ -171,6 +176,8 @@ void action_list_merch(ioopm_hash_table_t *wh)
 void action_edit_merch(ioopm_hash_table_t *wh, ioopm_carts_t *carts) 
 {
     char *merch_name = ask_question_string("Choose a merch to edit: ");
+    retain(merch_name);
+
     ioopm_option_t lookup = ioopm_hash_table_lookup(wh, ptr_elem(merch_name));
 
     // Check if merchandise exists
@@ -182,19 +189,22 @@ void action_edit_merch(ioopm_hash_table_t *wh, ioopm_carts_t *carts)
     }
 
     char *new_name = ask_question_string("New name: ");
+    retain(new_name);
 
     // Check if new name already exists
     if (strcmp(new_name, merch_name) != 0) 
     {
         while (ioopm_hash_table_lookup(wh, ptr_elem(new_name)).success)
         {
-          puts("Name already exists, choose another\n");
-          release(new_name);
-          new_name = ask_question_string("New name: ");
+            puts("Name already exists, choose another\n");
+            release(new_name);
+            new_name = ask_question_string("New name: ");
+            retain(new_name);
         }
     }
 
     char *new_desc = ask_question_string("New description: ");
+    retain(new_desc);
     int new_price = ask_question_int("New price (öre): ");
 
     // Edit merchandise after confirmation
@@ -225,7 +235,6 @@ void action_delete_merch(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, ioopm
     if (!lookup.success) 
     {
         puts("Merch not found\n");
-        release(merch_name);
         return;
     }
 
@@ -239,21 +248,21 @@ void action_delete_merch(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, ioopm
         }
         puts("Merch removed\n");
     }
-    release(merch_name);
 }
 
 /// Show stock of a merchandise
 void action_show_stock(ioopm_hash_table_t *wh)
 {
     char *merch_name = ask_question_string("Choose a merch to show stock: ");
+    retain(merch_name);
     ioopm_option_t lookup = ioopm_hash_table_lookup(wh, ptr_elem(merch_name));
 
     // Check if merchandise exists
     if (!lookup.success) 
     {
-      puts("Merch not found\n");
-      release(merch_name);
-      return;
+        puts("Merch not found\n");
+        release(merch_name);
+        return;
     }
 
     ioopm_merch_t *merch = lookup.value.p;
@@ -263,17 +272,17 @@ void action_show_stock(ioopm_hash_table_t *wh)
     // Check if there is stock available
     if (no_locs == 0) 
     {
-    puts("No stock available\n");
-    release(merch_name);
-    return;
+        puts("No stock available\n");
+        release(merch_name);
+        return;
     }
 
     // Print stock information
     printf("Stock for %s:\n", merch_name);
     for (int i = 0; i < no_locs; i++) 
     {
-      ioopm_shelf_t *shelf = ioopm_linked_list_get(locations, i).p;
-      printf("%s: %d\n", shelf->shelf, shelf->quantity);
+        ioopm_shelf_t *shelf = ioopm_linked_list_get(locations, i).p;
+        printf("%s: %d\n", shelf->shelf, shelf->quantity);
     }
 
     release(merch_name);
@@ -284,6 +293,8 @@ void action_replenish(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs)
 {
     char *shelf_name = ask_question_shelf("Shelf to replenish: ");
     char *merch_name = ask_question_string("Choose a merch to replenish: ");
+    retain(shelf_name);
+    retain(merch_name);
 
     // Check if merchandise exists
     ioopm_option_t lookup = ioopm_hash_table_lookup(wh, ptr_elem(merch_name));
@@ -303,7 +314,7 @@ void action_replenish(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs)
         puts("Invalid amount\n");
         return;
     }
-  
+
     // Replenish stock
     if (replenish_stock(wh, locs, merch_name, shelf_name, increase)) 
     {
@@ -366,6 +377,7 @@ void action_add_to_cart(ioopm_carts_t *carts, ioopm_hash_table_t *wh, ioopm_hash
     int cart_num = ask_question_cart("Choose a cart to add to:", carts);
 
     char *merch_name = ask_question_string("Choose a merch to add: ");
+    retain(merch_name);
     ioopm_option_t lookup = ioopm_hash_table_lookup(wh, ptr_elem(merch_name));
 
     // Validate merchandise existence
@@ -411,6 +423,7 @@ void action_remove_from_cart(ioopm_carts_t *carts, ioopm_hash_table_t *wh)
     int cart_num = ask_question_cart("Choose a cart to remove from:", carts);
 
     char *merch_name = ask_question_string("Choose a merch to remove: ");
+    retain(merch_name);
 
     // Validate merchandise existence
     ioopm_option_t lookup = ioopm_hash_table_lookup(wh, ptr_elem(merch_name));
@@ -493,54 +506,54 @@ void event_loop(ioopm_hash_table_t *wh, ioopm_hash_table_t *locs, ioopm_carts_t 
     while (true) 
     {
         char *option = ask_question_menu();
+        retain(option);
         char choice = toupper(option[0]);
-        
+
         if (choice == 'A')
         {
-        action_add_merch(wh);
+            action_add_merch(wh);
 
         } else if (choice == 'L') {
-        action_list_merch(wh);
+            action_list_merch(wh);
 
         } else if (choice == 'D') {
-        char *merch_name = ask_question_string("Choose a merch to remove: ");
-        action_delete_merch(wh, locs, carts, merch_name);
-        release(merch_name);
-
+            char *merch_name = ask_question_string("Choose a merch to remove: ");
+            retain(merch_name);
+            action_delete_merch(wh, locs, carts, merch_name);
+            release(merch_name);
         } else if (choice == 'E') {
-        action_edit_merch(wh, carts);
+            action_edit_merch(wh, carts);
 
         } else if (choice == 'S') {
-        action_show_stock(wh);
+            action_show_stock(wh);
 
         } else if (choice == 'P') {
-        action_replenish(wh, locs);
-        
+            action_replenish(wh, locs);
+
         } else if (choice == 'C') {
-        action_create_cart(carts);
+            action_create_cart(carts);
 
         } else if (choice == 'R') {
-        action_remove_cart(carts);
+            action_remove_cart(carts);
 
         } else if (choice == '+') {
-        action_add_to_cart(carts, wh, locs);
+            action_add_to_cart(carts, wh, locs);
 
         } else if (choice == '-') {
-        action_remove_from_cart(carts, wh);
+            action_remove_from_cart(carts, wh);
 
         } else if (choice == '=') {
-        action_calculate_cart(carts);
+            action_calculate_cart(carts);
 
         } else if (choice == 'O') {
-        action_checkout_cart(carts, locs);
+            action_checkout_cart(carts, locs);
 
         } else if (choice == 'Q') {
 
             if (ask_confirmation("Are you sure you want to quit? (y/n): ", 'y')) 
-        
+
             {
                 release(option);
-                quit(wh, locs, carts);
                 break;
             }
         }
@@ -558,8 +571,7 @@ int main(int argc, char *argv[])
 
     event_loop(wh, locs, carts);
 
-    deallocate(wh);
-    deallocate(locs);
-    deallocate(carts);
+    quit(wh, locs, carts);
+    shutdown();
     return 0;
 }

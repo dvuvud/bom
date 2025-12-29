@@ -8,21 +8,6 @@
 #include "utils.h"
 
 
-// String helper function (replacement for strdup)
-char *copy_string(const char *src)
-{
-  if (!src)
-  {
-    return NULL;
-  }
-
-  size_t len = strlen(src) + 1;
-  char *copy = allocate_array(len, sizeof(char), NULL);
-  memcpy(copy, src, len);
-  return copy;
-}
-
-
 bool is_number(char *str)
 {
     if (!str || *str == '\0') 
@@ -99,7 +84,7 @@ answer_t convert_to_int(char *str)
  answer_t convert_to_string(char *str)
 {
     answer_t answer;
-    answer.string_value = copy_string(str);
+    answer.string_value = refmem_strdup(str);
     return answer;
 }
 

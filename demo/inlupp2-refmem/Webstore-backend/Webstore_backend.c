@@ -53,7 +53,7 @@ static char **List_to_arr(ioopm_list_t *list, size_t list_size)
     char **arr = allocate_array(list_size, sizeof(char *), NULL); // create an empty array for pointers to the strings allocated by copy_string
     while (no_keys < list_size && ioopm_iterator_current(iter).p) {
         char *name = ioopm_iterator_current(iter).p;
-        char *copy_name = copy_string(name);
+        char *copy_name = refmem_strdup(name);
         retain(copy_name);
 
         arr[no_keys++] = copy_name;
@@ -235,11 +235,11 @@ ioopm_merch_t *create_merchandise(char *name, char *desc, int price)
 {
     ioopm_merch_t *new_merch = allocate(sizeof(ioopm_merch_t), NULL);
 
-    char *copy_new_name = copy_string(name);
+    char *copy_new_name = refmem_strdup(name);
     retain(copy_new_name);
     new_merch->name = copy_new_name;
 
-    char *copy_new_desc = copy_string(desc);
+    char *copy_new_desc = refmem_strdup(desc);
     retain(copy_new_desc);
     new_merch->description = copy_new_desc;
 
@@ -258,7 +258,7 @@ ioopm_shelf_t *create_shelf(char *shelf, int quantity)
 {
     ioopm_shelf_t *new_shelf = allocate(sizeof(ioopm_shelf_t), NULL);
 
-    char *copy_new_shelf = copy_string(shelf);
+    char *copy_new_shelf = refmem_strdup(shelf);
     retain(copy_new_shelf);
 
     new_shelf->shelf = copy_new_shelf;
@@ -321,7 +321,7 @@ bool edit_merchandise(ioopm_hash_table_t *wh, ioopm_carts_t *carts, char *merch,
 
             release(merch->name);
 
-            char *copy_new_name = copy_string(new_name);
+            char *copy_new_name = refmem_strdup(new_name);
             retain(copy_new_name);
 
             merch->name = copy_new_name;
@@ -337,7 +337,7 @@ bool edit_merchandise(ioopm_hash_table_t *wh, ioopm_carts_t *carts, char *merch,
             if (merch->in_cart > 0) remove_from_all_carts(carts, merch);
 
             release(merch->description);
-            char *copy_new_desc = copy_string(new_desc);
+            char *copy_new_desc = refmem_strdup(new_desc);
             retain(copy_new_desc);
 
             merch->description = copy_new_desc;

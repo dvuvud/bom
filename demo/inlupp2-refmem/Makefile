@@ -90,6 +90,7 @@ valgrind: $(TEST_TARGET)
 
 valgrind-frontend: $(FRONTEND_TARGET)
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(FRONTEND_TARGET)
+
 coverage: $(TEST_TARGET)
 	./$(TEST_TARGET)
 	gcov -b -c $(MAIN_OBJ) $(TEST_OBJ)
