@@ -68,3 +68,7 @@ obj/*
 # Don't ignore
 !*.keep
 !*.gitkeep
+
+# VS Code settings
+.vscode/
+*.code-workspace
