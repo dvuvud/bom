@@ -18,18 +18,45 @@
 
 ---
 
-# 2. Coding standard
+# 2. Code Quality Goals
 
-Lätt att förstå, lätt att ändra, korrekt minneshantering, testbar
-koppla till vår kod
+From the beginning of the project, we aimed to write code that is easy to read,
+easy to test, and easy to maintain over time. Since the system was developed by
+multiple people, clarity and consistency were more important than clever or
+overly compact solutions.
+
+We focused on keeping responsibilities well separated, making functions small
+and focused, and writing code that could be understood without deep knowledge of
+the entire system. This approach made it easier to modify existing functionality
+and to locate and fix bugs during development.
+
+These principles guided our decisions throughout the project and influenced how
+the system was structured and implemented.
 
 ---
 
 # 3. Readability
-# 3.1 Coding Style and Naming
-# 3.2 Comments and Documentation
+## 3.1 Coding Style and Naming
 
-Ex. namngivning, inte för långa funktioner, tydliga abstraktioner, sidoeffekter osv.
+To improve readability and consistency, we used the Apache C Style Guide as a
+reference for formatting and code structure. While it was not followed strictly
+in every detail, it provided a common baseline for indentation, brace placement,
+and general layout.
+
+Function and variable names were chosen to reflect their purpose rather than
+their implementation details. This made it easier to understand the role of
+different components without having to inspect their full implementation.
+
+---
+
+## 3.2 Comments and Documentation
+
+Comments were used primarily to explain intent and non-obvious behavior, rather
+than restating what the code already expresses. Public functions were documented
+using comments describing their purpose, parameters, and expected behavior.
+
+This made it easier to use and test individual modules without needing to read
+their full implementation.
 
 ---
 
@@ -56,17 +83,17 @@ Det olika modulerna gör att det kan testas var för sig
 
 ---
 
-# 7. Performance 
+# 7. Performance
 
 
 ---
 
-# Consequences of Our Design Choices
+# 8. Consequences of Our Design Choices
 
 Om det finns
 
 ---
 
-# Conclusion
+# 9. Conclusion
 
 
