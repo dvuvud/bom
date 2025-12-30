@@ -1,3 +1,4 @@
+.PHONY: memtest test generate_coverage clean all demo demo-original demo-data-tests demo-backend-tests demo-tests demo-original-tests
 # ------- Kompilator och flaggor ---------
 CC      = gcc
 CFLAGS  = -Wall -pedantic -g -Isrc/include
@@ -10,6 +11,9 @@ TESTDIR = test
 OBJDIR  = obj
 BINDIR  = bin
 COVDIR = docs/coverage
+
+DEMOREF = demo/inlupp2-refmem
+DEMONORM = demo/inlupp2-original
 
 # ----------------- Filer -----------------
 LIB_SRCS = $(wildcard $(SRCDIR)/*.c)
@@ -46,6 +50,30 @@ generate_coverage: clean
 	gcov -b -o $(OBJDIR) $(LIB_SRCS)
 	mv *.gcov $(COVDIR)
 
+# ------------------ Kör demo --------------------
+demo:
+	$(MAKE) -C $(DEMOREF) valgrind-frontend
+
+# --------------- Kör demo med test input ----------------
+demo-tests:
+	$(MAKE) -C $(DEMOREF) valgrind-frontend < $(DEMOREF)/Tests/webstoretest.txt
+
+# ----------- Kör testerna i demo -----------
+demo-backend-tests:
+	$(MAKE) -C $(DEMOREF) valgrind
+
+demo-data-tests:
+	$(MAKE) -C $(DEMOREF) data-valgrind
+
+# ------------------ Kör originalet --------------------
+demo-original:
+	$(MAKE) -C $(DEMONORM) valgrind-frontend
+
+# ----------------- Kör originalet med test input ----------------
+demo-original-tests:
+	$(MAKE) -C $(DEMONORM) valgrind-frontend < $(DEMONORM)/Tests/webstoretest.txt
+
 # ----------------- Städning -----------------
 clean:
 	rm -rf $(OBJDIR)/*.o $(OBJDIR)/*.gcno $(OBJDIR)/*.gcda $(BINDIR) $(COVDIR)
+	$(MAKE) -C $(DEMOREF) clean
