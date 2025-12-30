@@ -96,7 +96,7 @@ All tests are re-run after every fix to verify that previously fixed bugs do not
 
 ---
 
-# 5. The Six Most Severe Bugs
+# 5. The Five Most Severe Bugs
 
 | Bug | Description                                                  | Link                                                      |
 |-----|--------------------------------------------------------------|-----------------------------------------------------------|
