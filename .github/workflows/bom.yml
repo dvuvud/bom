@@ -30,3 +30,9 @@ jobs:
     - name: Run tests with Valgrind
       run: make memtest
 
+    - name: Run demo data structure tests with Valgrind
+      run: make demo-data-tests
+
+    - name: Run demo backend tests with Valgrind
+      run: make demo-backend-tests
+

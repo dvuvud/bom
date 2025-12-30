@@ -59,6 +59,12 @@ docs/html
 
 # Other things
 *.fuse*
+.clangd
+*.gcno
+*.gcda
+*data_structure_tests
+*backend_tests
+*webstore_frontend
 
 # Build dirs
 docs/coverage*

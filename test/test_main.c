@@ -11,6 +11,7 @@ void register_hashset_tests(void);
 void register_allocate_tests(void);
 void register_rc_tests(void);
 void register_retain_release_tests(void);
+void register_strdup_tests(void);
 
 int main(void)
 {
@@ -27,6 +28,7 @@ int main(void)
     register_allocate_tests();
     register_rc_tests();
     register_retain_release_tests();
+    register_strdup_tests();
 
     CU_basic_run_tests();
 
