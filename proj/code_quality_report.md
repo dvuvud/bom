@@ -18,7 +18,7 @@
 
 ---
 
-# 2. Out Definition of Good Code
+# 2. Coding standard
 
 Lätt att förstå, lätt att ändra, korrekt minneshantering, testbar
 koppla till vår kod
@@ -26,6 +26,8 @@ koppla till vår kod
 ---
 
 # 3. Readability
+# 3.1 Coding Style and Naming
+# 3.2 Comments and Documentation
 
 Ex. namngivning, inte för långa funktioner, tydliga abstraktioner, sidoeffekter osv.
 
@@ -33,12 +35,12 @@ Ex. namngivning, inte för långa funktioner, tydliga abstraktioner, sidoeffekte
 
 
 # 4. Maintainability and Structure
-
 Generiska datastrukturer, refmem är isolerat (egen modul)
 
 ---
 
 # 5. Correctness and Memory Safety
+# 5.1 Defensive Programming
 
 Använder inte malloc/calloc och free utanför refmem, vi retainar data när det sätts in i datastructurer och
 gör release när de tas bort från datastructurer
@@ -47,8 +49,15 @@ ex i hashtabel kan man hämta?
 ---
 
 # 6. Testability
+# 6.1 Design for Testing
+
 Det är designat för att vara testbart från början. Fanns ett krav i projektspecen.
 Det olika modulerna gör att det kan testas var för sig
+
+---
+
+# 7. Performance 
+
 
 ---
 
@@ -58,6 +67,6 @@ Om det finns
 
 ---
 
-# Final Reflection
+# Conclusion
 
 
