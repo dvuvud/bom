@@ -23,7 +23,7 @@ git clone --recursive https://github.com/IOOPM-UU/bom.git
 cd bom
 
 # Build library
-make
+make all
 ```
 
 ## Running tests
@@ -35,6 +35,32 @@ make test
 
 # Build and run tests with Valgrind
 make memtest
+```
+
+## Running demo (Valgrind*)
+
+#### Using Makefile
+```bash
+# Build library
+make all
+
+# Build and run demo
+make demo
+
+# Build and run demo with test input
+make demo-tests
+
+# Build and run backend tests
+make demo-backend-tests
+
+# Build and run data structure tests
+make demo-data-tests
+
+# Build and run original
+make demo-original
+
+# Build and run original with test input
+make demo-original-tests
 ```
 
 ## Generate coverage reports
