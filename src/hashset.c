@@ -62,7 +62,7 @@ void hashset_add(void *addr)
 
 bool hashset_contains(void *addr)
 {
-    if (addr_set.buckets == NULL) {
+    if (addr == NULL || addr_set.buckets == NULL) {
         return false;
     }
 
