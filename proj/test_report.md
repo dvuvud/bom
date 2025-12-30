@@ -3,7 +3,7 @@
 ## Participant List
 | Name                   | Email                                    | Active Dates           |
 |------------------------|------------------------------------------|------------------------|
-| David Buhrman          | david.buhrman.????@student.uu.se         | 3/12 2025 – 16/1 2026  |
+| David Buhrman          | david.buhrman.0648@student.uu.se         | 3/12 2025 – 16/1 2026  |
 | Erik Verastegui Ochoa  | erik.verastegui-ochoa.3297@student.uu.se | 3/12 2025 – 16/1 2026  |
 | Hiba Ahmad             | hiba.ahmad.5302@student.uu.se            | 3/12 2025 – 16/1 2026  |
 | Joel Terenius          | joel.terenius.0417@student.uu.se         | 3/12 2025 – 16/1 2026  |
@@ -47,16 +47,16 @@ Summary of coverage for core source files:
 | File        | Line Coverage | Branch Coverage |
 |-------------|---------------|-----------------|
 | hashset.c   | 100%          | 100%            |
-| queue.c     | 96.77%        | 100%            |
-| refmem.c    | 96.43%        | 100%            |
+| queue.c     | 96.30%        | 100%            |
+| refmem.c    | 99.13%        | 100%            |
 
 ---
 
-Suites run: 10  
-Tests run: 53  
-Tests passed: 51  
-Tests failed: 2  
-Assertions: 2648  
+Suites run: 11  
+Tests run: 58  
+Tests passed: 58  
+Tests failed: 0  
+Assertions: 2656  
 
 ---
 
@@ -98,13 +98,13 @@ All tests are re-run after every fix to verify that previously fixed bugs do not
 
 # 5. The Six Most Severe Bugs
 
-| Bug  | Description         | Link         |
-|------|---------------------|--------------|
-| #01  |                     | GitHub Issue |
-| #02  |                     | GitHub Issue |
-| #03  |                     | GitHub Issue |
-| #04  |                     | GitHub Issue |
-| #05  |                     | GitHub Issue |
+| Bug | Description                                                  | Link                                                      |
+|-----|--------------------------------------------------------------|-----------------------------------------------------------|
+| #35 | Default destructor was trying to access uninitialized memory | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/35) |
+| #32 | Tests were leaking memory due to shutdown not being called   | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/32) |
+| #39 | Cascading frees not handled on allocation                    | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/39) |
+| #48 | Hash set easily collides due to weak hash function           | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/48) |
+| #29  | Deallocate wasn't processing pending frees like release was | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/29) |
 
 ---
 
