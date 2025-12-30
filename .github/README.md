@@ -1,6 +1,6 @@
 # Boomers of Memory
 
-Short description of project...
+A reference-counted memory management system for C with automatic cleanup through conservative object scanning and configurable cascade limits.
 
 ## Documentation
 

@@ -1,19 +1,20 @@
 #include <CUnit/Basic.h>
 
 // Forward declarations of our registration functions from the other test modules
-void register_array_allocation_tests();
-void register_queue_tests();
-void register_cascade_limit_tests();
-void register_cleanup_shutdown_tests();
-void register_deallocate_tests();
-void register_default_destructor_tests();
-void register_hashset_tests();
-void register_allocate_tests();
-void register_rc_tests();
-void register_retain_release_tests();
-void register_strdup_tests();
+void register_array_allocation_tests(void);
+void register_queue_tests(void);
+void register_cascade_limit_tests(void);
+void register_cleanup_shutdown_tests(void);
+void register_deallocate_tests(void);
+void register_default_destructor_tests(void);
+void register_hashset_tests(void);
+void register_allocate_tests(void);
+void register_rc_tests(void);
+void register_retain_release_tests(void);
+void register_strdup_tests(void);
 
-int main() {
+int main(void)
+{
     CU_initialize_registry();
 
     // Register each file's suite

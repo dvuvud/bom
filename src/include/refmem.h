@@ -122,7 +122,7 @@ void set_cascade_limit(size_t limit);
  *
  * @return size_t The current cascade limit.
  */
-size_t get_cascade_limit();
+size_t get_cascade_limit(void);
 
 /**
  * @brief Forces the system to free all objects whose reference counters are at 0.
@@ -131,7 +131,7 @@ size_t get_cascade_limit();
  *
  * @note Used to limit the memory load when the system is inactive.
  */
-void cleanup();
+void cleanup(void);
 
 /**
  * @brief Turns off the memory management library entirely.
@@ -140,7 +140,7 @@ void cleanup();
  *
  * @note Should be called at the end of the program to ensure there are not internal memory leaks coming from the library itself.
  */
-void shutdown();
+void shutdown(void);
 
 /**
 * @brief Duplicates a string using reference counted memory
