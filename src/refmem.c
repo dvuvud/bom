@@ -268,16 +268,14 @@ static void default_destructor(obj *p)
 // Duplicates a string using reference counted memory
 char *refmem_strdup(const char *src)
 {
-    if (src == NULL) 
-    {
+    if (src == NULL) {
         return NULL;
     }
 
     size_t len = strlen(src) + 1;  // +1 for null terminator
-    char *dest = (char *)allocate(len, NULL);
+    char *dest = (char *)allocate_array(len, sizeof(char), NULL);
 
-    if (dest == NULL) 
-    {
+    if (dest == NULL) {
         return NULL;
     }
 
