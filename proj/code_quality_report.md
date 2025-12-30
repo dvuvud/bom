@@ -62,16 +62,57 @@ their full implementation.
 
 
 # 4. Maintainability and Structure
-Generiska datastrukturer, refmem är isolerat (egen modul)
+
+Maintainability was achieved by structuring the system into clear and well-defined
+modules with distinct responsibilities. The core reference-counted memory
+management is separated from supporting data structures such as the queue and
+hash set, each implemented in its own file.
+
+Public interfaces are defined in header files and kept small, while
+internal implementation details are hidden using static functions. This makes
+it possible to change or improve internal behavior without affecting other parts
+of the system, as long as the interfaces remain unchanged.
+
+The code follows consistent patterns for error handling and control flow, which
+makes future modifications easier and less error-prone. 
+
+Overall, these design choices made the system easier to extend, debug, and
+maintain over time.
 
 ---
 
 # 5. Correctness and Memory Safety
+
+Correctness and memory safety were central concerns throughout the implementation
+of the reference-counted memory management system. The code was written to behave
+predictably even in the presence of invalid inputs or unexpected usage patterns,
+and to avoid undefined behavior where possible.
+
 # 5.1 Defensive Programming
 
-Använder inte malloc/calloc och free utanför refmem, vi retainar data när det sätts in i datastructurer och
-gör release när de tas bort från datastructurer
-ex i hashtabel kan man hämta?
+Defensive programming techniques are used consistently across the codebase.
+Functions validate their inputs early, and invalid states such as NULL pointers,
+untracked objects, or incorrect reference counts are handled safely by returning
+without performing any action. This prevents illegal memory access and reduces
+the risk of crashes.
+
+Reference counting operations are used to avoid overflow, and
+objects are only freed when their reference count reaches zero and they are
+known to be tracked by the system. Destructors are used in a controlled and
+well-defined manner, ensuring that cleanup logic is executed before memory is
+released.
+
+# 5.2 Adherence to Specification
+
+The implementation follows the project specification by replacing direct use of
+malloc, calloc, and free with a reference-counted memory management
+interface. Objects are only freed when their reference count reaches zero, and
+explicit rules for allocation, retention, and release are consistently enforced.
+
+Support for destructors and default destructors ensures that complex data
+structures are cleaned up correctly. Cascading frees are handled in a controlled
+manner, and cleanup and shutdown functionality ensures that all internal data
+structures are released at program termination.
 
 ---
 
