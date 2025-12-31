@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define HASH_TABLE_SIZE 1024
+#define HASH_TABLE_SIZE 1021
 
 typedef struct hash_node {
     void *addr;
