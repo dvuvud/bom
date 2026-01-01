@@ -152,12 +152,12 @@ obj *allocate(size_t bytes, function1_t destructor)
 {
     metadata_t *metadata;
 
+    process_pending_frees_byte_limit(bytes);
+
     metadata = calloc(1, sizeof(metadata_t) + bytes);
     if (metadata == NULL) {
         return NULL;
     }
-
-    process_pending_frees_byte_limit(bytes);
 
     metadata->refcount = 0;
     metadata->size = bytes;
@@ -181,12 +181,12 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
 
     total_bytes = elements * elem_size;
 
+    process_pending_frees_byte_limit(total_bytes);
+
     metadata = calloc(1, sizeof(metadata_t) + total_bytes);
     if (metadata == NULL) {
         return NULL;
     }
-
-    process_pending_frees_byte_limit(total_bytes);
 
     metadata->refcount = 0;
     metadata->size = total_bytes;
