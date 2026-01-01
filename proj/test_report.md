@@ -94,9 +94,11 @@ Regression testing was performed by adding new tests to the test suite whenever 
 
 All tests are re-run after every fix to verify that previously fixed bugs do not corrupt the whole system.
 
+Later in the project we also added a workflow to automate testing on pull requests to main.
+
 ---
 
-# 5. The Five Most Severe Bugs
+# 5. The Six Most Severe Bugs
 
 | Bug | Description                                                  | Link                                                      |
 |-----|--------------------------------------------------------------|-----------------------------------------------------------|
@@ -104,20 +106,44 @@ All tests are re-run after every fix to verify that previously fixed bugs do not
 | #32 | Tests were leaking memory due to shutdown not being called   | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/32) |
 | #39 | Cascading frees not handled on allocation                    | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/39) |
 | #48 | Hash set easily collides due to weak hash function           | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/48) |
-| #29  | Deallocate wasn't processing pending frees like release was | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/29) |
+| #29 | Deallocate wasn't processing pending frees like release was  | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/29) |
+| #22 | Tests were using retain before its implementation was added  | [GitHub Issue](https://github.com/IOOPM-UU/bom/issues/22) |
+
 
 ---
 
-# 6. Known Test Failures and Limitations
+# 6. Unit Test Failures and Uncovered Branches
 
 Two unit tests failed consistently:
 
 - Tests for extremely large allocations in `test_allocate.c`
 - Tests for extremely large array allocations in `test_allocate_array.c`
 
-These tests expect allocation functions to return `NULL` when requesting very large memory blocks.
+These tests expect the allocation functions to return `NULL` when requesting very large memory blocks.
 
-On some systems, `malloc` may succeed even for very large allocations. This is due to memory overcommit behavior. As a result, these tests may fail even when the implementation is correct. Therefore, these failures are not considered a functional correctness error.
+On some systems, however, `malloc` may succeed even for extremely large allocation requests due to memory overcommit behavior. As a result, these tests can fail even when the implementation is correct. Therefore, these failures are not considered functional correctness errors.
+
+## Uncovered Code Branches
+
+Additionally, there are two code branches that are never exercised by the tests.
+
+From `refmem_strdup` in `refmem.c`:
+
+```
+char *dest = (char *)allocate_array(len, sizeof(char), NULL);
+
+if (dest == NULL) {
+    return NULL;
+}
+```
+From `queue_push` in `queue.c`:
+```
+queue_node_t *new_node = malloc(sizeof(queue_node_t));
+if (!new_node) {
+    return -1;
+}
+```
+Reaching these branches in tests would require exhausting the available heap memory. This was deemed unrealistic and not worth the effort solely to achieve coverage for these specific cases.
 
 ---
 
