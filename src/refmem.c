@@ -48,10 +48,6 @@ size_t rc(obj *p)
 
 static void free_object(obj *p)
 {
-    if (p == NULL) {
-        return;
-    }
-
     // get metadata
     metadata_t *meta = meta_from_obj(p);
 
@@ -239,10 +235,6 @@ void shutdown(void)
 // Default destructor
 static void default_destructor(obj *p)
 {
-    if (p == NULL) {
-        return;
-    }
-
     metadata_t *meta = meta_from_obj(p);
     size_t object_size = meta->size;
     

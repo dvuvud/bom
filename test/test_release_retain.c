@@ -114,6 +114,18 @@ void test_retain_past_limit(void)
     shutdown();
 }
 
+// test release and retain on address not in hashset
+void test_release_retain_on_address_not_allocated(void)
+{
+    obj *p = allocate(1, NULL);
+    retain((obj *)0x1234);
+    CU_ASSERT_EQUAL(rc(p), 0);
+    release((obj *)0x1234);
+    CU_ASSERT_PTR_NOT_NULL(p);
+    deallocate(p);
+    shutdown();
+}
+
 void register_retain_release_tests(void)
 {
     CU_pSuite suite = CU_add_suite("retain & release", 0, 0);
@@ -123,4 +135,5 @@ void register_retain_release_tests(void)
     CU_add_test(suite, "test retain past limit", test_retain_past_limit);
     CU_add_test(suite, "test retain and release on null", test_retain_release_null);
     CU_add_test(suite, "test release on zero refcount", test_release_zero);
+    CU_add_test(suite, "test release and retain non-allocated address", test_release_retain_on_address_not_allocated);
 }

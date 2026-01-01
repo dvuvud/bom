@@ -58,6 +58,16 @@ void test_deallocate_with_rc_not_zero(void)
     shutdown();
 }
 
+// test release and retain on address not in hashset
+void test_deallocate_on_address_not_allocated(void)
+{
+    obj *p = allocate(1, NULL);
+    deallocate((obj *)0x1234);
+    CU_ASSERT_PTR_NOT_NULL(p);
+    deallocate(p);
+    shutdown();
+}
+
 void register_deallocate_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Deallocate", NULL, NULL);
@@ -65,4 +75,5 @@ void register_deallocate_tests(void)
     CU_add_test(suite, "test if deallocate calls destructor", test_deallocate_calls_destructor);
     CU_add_test(suite, "test if deallocate allows rc == 0", test_deallocate_with_rc_zero);
     CU_add_test(suite, "test if deallocate handles rc != 0", test_deallocate_with_rc_not_zero);
+    CU_add_test(suite, "test deallocate on non-allocated address", test_deallocate_on_address_not_allocated);
 }
