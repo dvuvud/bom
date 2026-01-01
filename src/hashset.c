@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define HASH_TABLE_SIZE 1024
+#define HASH_TABLE_SIZE 1021
 
 typedef struct hash_node {
     void *addr;
@@ -62,7 +62,7 @@ void hashset_add(void *addr)
 
 bool hashset_contains(void *addr)
 {
-    if (addr_set.buckets == NULL) {
+    if (addr == NULL || addr_set.buckets == NULL) {
         return false;
     }
 
