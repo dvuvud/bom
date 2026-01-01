@@ -8,8 +8,8 @@
  * This type is used to hide the objects internal metadata from the user
  * 
  * @note Because the reference counter is 8-bit, each object can hold at most
- * 255 active references. Overflowing this limit results in undefined
- * behavior.
+ * 255 active references. When this limit is reached, further calls to
+ * retain() are silently ignored.
  */
 typedef void obj;
 
@@ -27,10 +27,10 @@ typedef void (*function1_t)(obj *);
  *
  * @param p Pointer to the object whose reference counter should be incremented
  *
- * @note If `p` is `NULL`, the call is silently ignored.
+ * @note If `p` is `NULL`, or not managed by the memory system, the call is silently ignored.
  *
  * @warning The reference counter is 8-bit (0–255). 
- * Trying to increment beyond 255 results in overflow and undefined behavior.
+ * When the maximum value is reached, further increments are ignored.
  *
  * @par Example:
  * @code
@@ -43,11 +43,14 @@ void retain(obj *p);
 /**
  * @brief Decrements the reference counter of an object
  *
- * If the reference counter reaches 0, the object will be marked as garbage and queued for release from memory
+ * If the reference counter reaches 0, the object will be marked as garbage
+ * and queued for release from memory subject to the cascade limit.
  *
  * @param p Pointer to the object whose reference counter should be decremented
  *
- * @note If `p` is `NULL`, the call is silently ignored.
+ * @note If `p` is `NULL` or not managed by the memory system,
+ * the call is silently ignored.
+*
  * @par Example:
  * @code
  * struct cell *c = ...; // rc(c) = 1
@@ -62,7 +65,7 @@ void release(obj *p);
  * @param p Pointer to the object
  * @return size_t The value of the objects current reference counter.
  *
- * @note If `p` is `NULL`, the return value is undefined.
+ * @note If `p` is `NULL`, this function returns 0.
  */
 size_t rc(obj *p);
 
@@ -75,6 +78,7 @@ size_t rc(obj *p);
  *
  * @note The call the trigger collection of garbage up to the cascade limit.
  * @warning Internal memory leaks can occur if destruction is not handled correctly.
+ *
  * @par Example:
  * @code
  * struct cell *c = (struct cell*) allocate(sizeof(struct cell), cell_destructor);
@@ -85,12 +89,14 @@ obj *allocate(size_t bytes, function1_t destructor);
 /**
  * @brief Allocates a block of memory for an array (similar to `calloc`) and initiates reference counting
  *
- * The destructor is called for each element in the array (if they aren't `NULL`).
+ * The destructor is called once for the entire array. If the default
+ * destructor is used, the array is scanned for managed pointers which
+ * are released automatically.
  *
- * @param destructor Function to call for each element in the array when freeing memory, or `NULL` for a default destructor
+ * @param destructor Function to call when freeing the array, or `NULL` for a default destructor
  * @return obj* Pointer to the allocated memory.
  *
- * @note Similar to `calloc`, memory is null instantiated.
+ * @note Similar to `calloc`, memory is zero-initialized.
  * @par Example:
  * @code
  * // Allocates an array of 10 int pointers with a default destructor
@@ -125,7 +131,7 @@ void set_cascade_limit(size_t limit);
 size_t get_cascade_limit(void);
 
 /**
- * @brief Forces the system to free all objects whose reference counters are at 0.
+ * @brief Forces the system to free all queued garbage objects.
  *
  * The cascade limit is ignored during this operation.
  *
@@ -138,7 +144,8 @@ void cleanup(void);
  *
  * Frees all internal datastructures.
  *
- * @note Should be called at the end of the program to ensure there are not internal memory leaks coming from the library itself.
+ * @note Should be called at the end of the program to ensure there are
+ * not internal memory leaks coming from the library itself.
  */
 void shutdown(void);
 
