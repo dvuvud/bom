@@ -117,21 +117,44 @@ structures are released at program termination.
 ---
 
 # 6. Testability
+
 # 6.1 Design for Testing
 
-Det är designat för att vara testbart från början. Fanns ett krav i projektspecen.
-Det olika modulerna gör att det kan testas var för sig
+The system was designed to be easily testable from the start.
+
+Functions are small and focused and their behavior is predictable. This makes
+tests easier to write and easier to understand. Production code and test code
+are kept separate, which allows each part of the system to be tested on its own.
+
+Internal components such as the queue and the hash set are implemented in
+separate modules and can be tested independently. This made it possible to meet
+the project requirement of full test coverage in a clear and structured way.
 
 ---
 
 # 7. Performance
 
+Performance was carefully considered during the design of the system, but never at the
+expense of correctness or readability. The implementation follows the project
+specification, which emphasizes predictabiliity.
+
+Reference counting operations are constant-time, and internal data structures
+such as the queue and hash set provide efficient access for tracking allocated
+objects. The use of a cascade limit prevents long chains of deallocations from
+blocking the program for extended periods of time.
 
 ---
 
 # 8. Consequences of Our Design Choices
 
-Om det finns
+The design choices made throughout the project resulted in a system that is
+clear, predictable, and robust. By prioritizing readability and simple
+abstractions, the code became easier to understand, review, and modify during
+development.
+
+Emphasizing correctness, memory safety, and testability led to a stable system
+that fulfills the project specification. The design choices supported a
+development process that was efficient, reliable, and easy to manage.
 
 ---
 
