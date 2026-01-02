@@ -3,7 +3,7 @@
 ## Participant List
 | Name                   | Email                                    | Active Dates           |
 |------------------------|------------------------------------------|------------------------|
-| David Buhrman          | david.buhrman.????@student.uu.se         | 3/12 2025 – 16/1 2026  |
+| David Buhrman          | david.buhrman.0648@student.uu.se         | 3/12 2025 – 16/1 2026  |
 | Erik Verastegui Ochoa  | erik.verastegui-ochoa.3297@student.uu.se | 3/12 2025 – 16/1 2026  |
 | Hiba Ahmad             | hiba.ahmad.5302@student.uu.se            | 3/12 2025 – 16/1 2026  |
 | Joel Terenius          | joel.terenius.0417@student.uu.se         | 3/12 2025 – 16/1 2026  |
@@ -14,7 +14,14 @@
 
 # 1. Overview
 
+This report describes how code quality considerations influenced the design and
+implementation of our project. Rather than focusing on individual functions, the
+report explains the overall principles that guided our development process.
 
+The project involved implementing a reference-counted memory management system
+and adapting existing code to use it correctly. This required a strong focus on
+readability, correctness, and memory safety, while still keeping the system
+testable and maintainable.
 
 ---
 
@@ -74,7 +81,7 @@ it possible to change or improve internal behavior without affecting other parts
 of the system, as long as the interfaces remain unchanged.
 
 The code follows consistent patterns for error handling and control flow, which
-makes future modifications easier and less error-prone. 
+makes future modifications easier and less error-prone.
 
 Overall, these design choices made the system easier to extend, debug, and
 maintain over time.
@@ -88,6 +95,8 @@ of the reference-counted memory management system. The code was written to behav
 predictably even in the presence of invalid inputs or unexpected usage patterns,
 and to avoid undefined behavior where possible.
 
+---
+
 # 5.1 Defensive Programming
 
 Defensive programming techniques are used consistently across the codebase.
@@ -96,11 +105,13 @@ untracked objects, or incorrect reference counts are handled safely by returning
 without performing any action. This prevents illegal memory access and reduces
 the risk of crashes.
 
-Reference counting operations are used to avoid overflow, and
+Reference-counting operations are used to avoid overflow, and
 objects are only freed when their reference count reaches zero and they are
 known to be tracked by the system. Destructors are used in a controlled and
 well-defined manner, ensuring that cleanup logic is executed before memory is
 released.
+
+---
 
 # 5.2 Adherence to Specification
 
@@ -160,4 +171,13 @@ development process that was efficient, reliable, and easy to manage.
 
 # 9. Conclusion
 
+Throughout the project, we prioritized code quality over short-term convenience.
+By focusing on readability, maintainability, correctness, and
+testability, we were able to build a system that is robust and aligned with the
+project specification.
 
+The reference-counted memory management integrates cleanly with the rest of the
+codebase, and clear ownership rules make the system easier to understand, test,
+and extend.
+
+---
