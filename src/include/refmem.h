@@ -76,6 +76,8 @@ size_t rc(obj *p);
  * @param destructor Function to call before freeing the object, or `NULL` for default destructor
  * @return obj* Pointer to the object allocated in memory.
  *
+ * @note Similar to `calloc`, the allocated memory is zero-initialized.
+ * @note Returns `NULL` if memory allocation fails.
  * @note The call the trigger collection of garbage up to the cascade limit.
  * @warning Internal memory leaks can occur if destruction is not handled correctly.
  *
@@ -93,10 +95,13 @@ obj *allocate(size_t bytes, function1_t destructor);
  * destructor is used, the array is scanned for managed pointers which
  * are released automatically.
  *
+ * @param elements Number of elements in the array
+ * @param elem_size Size of each element
  * @param destructor Function to call when freeing the array, or `NULL` for a default destructor
  * @return obj* Pointer to the allocated memory.
  *
  * @note Similar to `calloc`, memory is zero-initialized.
+ * @note Returns `NULL` if memory allocation fails.
  * @par Example:
  * @code
  * // Allocates an array of 10 int pointers with a default destructor
@@ -106,7 +111,7 @@ obj *allocate(size_t bytes, function1_t destructor);
 obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor);
 
 /**
- * @brief Frees an object immediately, if the reference counter is 0
+ * @brief Frees an object if the reference counter is 0
  *
  * The objects destructor is called before the memory is freed.
  *
@@ -157,5 +162,7 @@ void shutdown(void);
 *
 * @param src The source string to duplicate
 * @return char* Pointer to the duplicated string
+*
+* @note Returns `NULL` if memory allocation fails.
 */
 char *refmem_strdup(const char *src);
