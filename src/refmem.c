@@ -76,6 +76,20 @@ static void process_pending_frees(void)
     }
 }
 
+static void process_pending_frees_byte_limit(size_t byte_limit)
+{
+    // free objects
+    size_t i = 0;
+    size_t bytes_freed = 0;
+    while (pending_frees.count > 0
+           && (i < cascade_limit || bytes_freed < byte_limit)) {
+        obj *garbage = queue_pop(&pending_frees);
+        bytes_freed += meta_from_obj(garbage)->size;
+        free_object(garbage);
+        i++;
+    }
+}
+
 void retain(obj *p)
 {
     if (p == NULL) {
@@ -134,6 +148,8 @@ obj *allocate(size_t bytes, function1_t destructor)
 {
     metadata_t *metadata;
 
+    process_pending_frees_byte_limit(bytes);
+
     metadata = calloc(1, sizeof(metadata_t) + bytes);
     if (metadata == NULL) {
         return NULL;
@@ -160,6 +176,8 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     }
 
     total_bytes = elements * elem_size;
+
+    process_pending_frees_byte_limit(total_bytes);
 
     metadata = calloc(1, sizeof(metadata_t) + total_bytes);
     if (metadata == NULL) {
