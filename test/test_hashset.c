@@ -213,8 +213,8 @@ void test_hashset_collisions(void)
 
     // These addresses potentially collide
     void *addr1 = (void *)0x1000;
-    void *addr2 = (void *)0x1008;
-    void *addr3 = (void *)0x1010;
+    void *addr2 = (void *)0x2FE8;
+    void *addr3 = (void *)0x4FD0;
 
     hashset_add(addr1);
     hashset_add(addr2);
