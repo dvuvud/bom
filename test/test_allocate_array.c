@@ -93,6 +93,16 @@ void test_allocate_array_huge(void)
     shutdown();
 }
 
+void test_allocate_array_huge_huge(void)
+{
+    size_t big_count = (((size_t) 1)<<58) - 1;
+    
+    obj **allocation = allocate_array(big_count, sizeof(int), NULL);
+    CU_ASSERT_PTR_NULL(allocation);
+    
+    shutdown();
+}
+
 void register_array_allocation_tests(void)
 {
     CU_pSuite suite = CU_add_suite("Allocate_array", 0, 0);
@@ -103,5 +113,6 @@ void register_array_allocation_tests(void)
     CU_add_test(suite, "test allocate_array with array of char *", test_allocate_array_ptr);
     CU_add_test(suite, "test allocate_array with array of obj *", test_allocate_array_ptr_obj);
     CU_add_test(suite, "test allocate_array with huge data", test_allocate_array_huge);
+    CU_add_test(suite, "test allocate_array with huge data bigger than size", test_allocate_array_huge_huge);
 }
 

@@ -7,14 +7,15 @@
 
 
 #define REFCOUNT_MAX 255
+#define OBJECT_SIZE_MAX (((size_t)1<<56)-1)
 
 static queue_t pending_frees = { NULL, NULL, 0 };       // Queue of cascading frees
 static size_t cascade_limit = 100;                      // Global cascade limit (default value)
 
 // Memory layout - [metadata][user object]
 typedef struct metadata {
-    uint8_t refcount;         // objects can have a maximum of 255 references
-    size_t size;              // size of user object
+    size_t refcount : 8;      // objects can have a maximum of 255 references
+    size_t size : 56;         // size of user object (up to OBJECT_SIZE_MAX)
     function1_t destructor;   // destructor callback (may be NULL)
 } metadata_t;
 
@@ -147,6 +148,10 @@ void release(obj *p)
 obj *allocate(size_t bytes, function1_t destructor)
 {
     metadata_t *metadata;
+    
+    if (bytes > OBJECT_SIZE_MAX) {
+        return NULL;
+    }
 
     process_pending_frees_byte_limit(bytes);
 
@@ -176,6 +181,10 @@ obj *allocate_array(size_t elements, size_t elem_size, function1_t destructor)
     }
 
     total_bytes = elements * elem_size;
+    
+    if (total_bytes > OBJECT_SIZE_MAX) {
+        return NULL;
+    }
 
     process_pending_frees_byte_limit(total_bytes);
 
