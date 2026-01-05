@@ -80,7 +80,7 @@ If the project were to be restarted tomorrow, the team would continue using shor
 
 The initial project plan consisted of three main sprints: implementing the library, integrating it with the existing program, and writing the report. More detailed planning was carried out during sprint meetings, where tasks were discussed, estimated, and assigned. While the high-level plan was generally followed, some sprint goals had to be adjusted due to underestimation of task complexity and time constraints. Despite this, most planned features were delivered on time.
 
-At the start of the project, the team aimed to complete most of the work before the Christmas break. However, due to other ongoing assignments, the project did not start as early as intended. As a result, work during the holidays was carried out in a more distributed and irregular manner. This made coordination and communication more challenging and sometimes led to work feeling rushed and a lack of overall overview of the project. Despite these challenges, the team leader played an important role in keeping the project together by coordinating tasks and ensuring that progress was maintained.
+At the start of the project, the team aimed to complete most of the work before the Christmas break. However, due to other ongoing assignments, the project did not start as early as intended. As a result, the original plan had to be adjusted, and sprint goals were revised to better reflect the available time. This highlighted the importance of allocating sufficient time for preparation and requirement analysis early in the project.
 
 ---
 
@@ -104,20 +104,22 @@ In this section, discuss:
 - the coordination between team members with respect to technical tasks
 - how did you deal with team members that were demotivated, angry, stressed about things outside of the project?
 - how did you handle communication, cooperation and coordination during the break?
+### Lessons learned
 
-From the beginning of the course, we made a conscious decision to focus all communication on Discord. This platform became our primary channel for planning meetings, sharing updates, and discussing ongoing work. To reduce communication complications, we also invited our supervisor to the Discord server, enabling quick contact when urgent matters arose. This decision helped ensure that relevant information was accessible to the entire team.
+---
+
+From the beginning of the project, we made a conscious decision to focus all communication on Discord. This platform became our primary channel for planning meetings, sharing updates, and discussing ongoing work. To reduce communication complications, we also invited our supervisor to the Discord server, enabling quick contact when urgent matters arose. This decision helped ensure that relevant information was accessible to the entire team.
 As the winter break approached, we anticipated challenges related to the lack of physical meetings. During this period, all collaboration shifted to Discord’s voice call functionality. This transition was not perceived as an obstacle. Ahead of the break, we agreed on dates when team members were likely to be unavailable, such as during Christmas and New Year, and planned our work accordingly. This planning helped maintain continuity and avoided unrealistic expectations.
 
 To structure our work, we divided the team into pairs early in the project. Each pair was responsible for a sprint between two scheduled meetings, which allowed us to distribute responsibility evenly. Tasks were not primarily assigned based on preference, but rather on availability, and there was a shared understanding that any pair could reach out to the rest of the group if difficulties arose. Our regular meetings served as natural deadlines, ensuring steady progress and preventing the project from being deprioritized.
 Coordination of technical work was largely handled through meetings, where completed tasks were discussed and new ones assigned. The group leader took additional responsibility by reaching out individually to team members to provide feedback on written code. This helped align our technical solutions and maintain a consistent coding standard throughout the project.
 
-The main challenge we faced was not related to communication structure or cooperation within the team, but rather time constraints. The project coincided with other courses and personal commitments, which at times affected motivation and stress levels. By maintaining realistic expectations, we were able to support each other and keep the workload manageable. The meeting-based deadlines proved especially effective in ensuring that the project continued to move forward, even during periods of reduced availability.
+The main challenge we faced was not related to communication structure or cooperation within the team, but rather time constraints. The project coincided with other courses and personal commitments, which sometimes led to tasks feeling rushed and to a reduced sense of overall project overview.
+This was especially noticeable during the Christmas break, when team members often worked at different times, which sometimes delayed feedback and reduced the overall project overview.
+By maintaining realistic expectations, we were able to support each other and keep the workload manageable. The meeting-based deadlines proved especially effective in ensuring that the project continued to move forward, even during periods of reduced availability.
 
 In retrospect, our early decisions regarding communication, task distribution, and planning around known constraints were crucial to the team’s ability to adapt. One key lesson learned is the importance of proactive coordination and clear expectations, particularly when external factors limit availability. 
 
-### Lessons learned
-
----
 
 ## 6 Work Breakdown Structure
 
