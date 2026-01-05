@@ -21,18 +21,40 @@ Boomers of Memory
 
 ## 2 Quantification
 
-In this section, state:
+This section summarizes quantitative aspects of the project, including timeline, development effort, and repository activity.
 
-- Project start date  
-- Project end date  
-- Number of sprints, their start and end dates  
-- Total number of new lines of C code written excluding tests and preexisting code  
-- Total number of lines of test code  
-- Total number of lines of “script code” (e.g., make files, Python scripts for generating test data, etc.)  
-- Total number of hours worked by the team  
-- Total number of git commits  
-- Total number of pull requests  
-- Total number of GitHub issues  
+### Project Timeline
+
+- **Project start date:** [2025-12-03]
+- **Project end date:** [2025-01-07]
+
+### Sprints
+
+The project was carried out over **[3] sprints**:
+
+- **Sprint 1:** [2025-12-12] – [2025-12-23]
+- **Sprint 2:** [2025-12-23] – [2025-01-02]
+- **Sprint 3:** [2025-01-02] – [2025-01-07]
+
+### Code Metrics
+
+- **Total number of new lines of C code (excluding tests and preexisting code):** [346]
+- **Total number of lines of test code:** [890]
+- **Total number of lines of script code (e.g., Makefiles, Python scripts):** [48]
+
+The code metrics were collected using the cloc tool. Blank lines and comments were excluded.
+Only code written during the project period was included in the measurements.
+
+### Effort
+
+- **Total number of hours worked by the team:** [Number] hours
+
+### Repository Activity
+
+- **Total number of git commits:** [Number]
+- **Total number of pull requests:** [Number]
+- **Total number of GitHub issues:** [Number]
+
 
 ---
 
@@ -40,21 +62,25 @@ In this section, state:
 
 ### 3.1 Inception
 
-In this section, discuss choice of process, how you went about learning the process, how you went about implementing the process.
+The project followed an agile development process inspired by Scrum. This approach was chosen because the project was relatively small and all team members had limited experience working on projects, making an iterative process with regular feedback a good choice.
+
+The team learned about the process mainly through lectures and online resources.
+
+We did not assign formal roles to the entire team, but instead chose a project leader and decided to work in pairs throughout the project. We also decided on the sprint length and scheduled regular meetings to review progress. The process was intentionally kept lightweight to avoid unnecessary overhead.
 
 ---
 
 ### 3.2 Implementation
 
-In this section, discuss:
+In practice, the team implemented a simplified version of Scrum. Sprint planning and sprint review were combined into a single meeting held at the end of each sprint and the beginning of the next. Daily stand-ups were initially planned but were replaced by asynchronous updates in a shared communication channel due to scheduling constraints.
 
-- what you actually implemented of the process  
-- strengths and weaknesses with your implementation of your chosen process  
-- what you would do differently if you were to start over tomorrow  
-- what successes you would attempt to repeat if you were to start over tomorrow  
-- how plans were made, key plans, and to what extent your plans were followed  
-- how decision making happened, key decisions, and whether they were followed  
-- how did you attack the Christmas break problem with planning?  
+One strength of the implemented process was the clear structure provided by working in sprints, which helped the team maintain a steady development pace. The use of a shared Jira board improved the visibility of tasks and responsibilities and made it easier to track progress. However, a weakness of the process was the lack of clearly defined roles within the team. As a result, responsibility was often limited to the tasks an individual was currently working on, rather than having ownership over larger parts of the project.
+
+If the project were to be restarted tomorrow, the team would continue using short, well-defined sprints and regular follow-up meetings, as this approach proved effective in maintaining momentum and identifying issues early. What would be done differently is allocating more time to preparation before starting the implementation phase. Early in the project, the team lacked a clear understanding of the project scope and requirements, which led to parts of the implementation being developed before their intended behavior was fully understood.
+
+The initial project plan consisted of three main sprints: implementing the library, integrating it with the existing program, and writing the report. More detailed planning was carried out during sprint meetings, where tasks were discussed, estimated, and assigned. While the high-level plan was generally followed, some sprint goals had to be adjusted due to underestimation of task complexity and time constraints. Despite this, most planned features were delivered on time.
+
+At the start of the project, the team aimed to complete most of the work before the Christmas break. However, due to other ongoing assignments, the project did not start as early as intended. As a result, work during the holidays was carried out in a more distributed and irregular manner. This made coordination and communication more challenging and sometimes led to work feeling rushed and a lack of overall overview of the project. Despite these challenges, the team leader played an important role in keeping the project together by coordinating tasks and ensuring that progress was maintained.
 
 ---
 
@@ -62,10 +88,10 @@ In this section, discuss:
 
 In this section, discuss:
 
-- what tools you used in the project  
-- what use you had of those tools  
-- if there were any tools you were lacking  
-- tools you would rather not use in the future  
+- what tools you used in the project
+- what use you had of those tools
+- if there were any tools you were lacking
+- tools you would rather not use in the future
 
 ---
 
@@ -73,11 +99,11 @@ In this section, discuss:
 
 In this section, discuss:
 
-- the communication between team members and with people outside the team  
-- the cooperation between team members  
-- the coordination between team members with respect to technical tasks  
-- how did you deal with team members that were demotivated, angry, stressed about things outside of the project?  
-- how did you handle communication, cooperation and coordination during the break?  
+- the communication between team members and with people outside the team
+- the cooperation between team members
+- the coordination between team members with respect to technical tasks
+- how did you deal with team members that were demotivated, angry, stressed about things outside of the project?
+- how did you handle communication, cooperation and coordination during the break?
 
 From the beginning of the course, we made a conscious decision to focus all communication on Discord. This platform became our primary channel for planning meetings, sharing updates, and discussing ongoing work. To reduce communication complications, we also invited our supervisor to the Discord server, enabling quick contact when urgent matters arose. This decision helped ensure that relevant information was accessible to the entire team.
 As the winter break approached, we anticipated challenges related to the lack of physical meetings. During this period, all collaboration shifted to Discord’s voice call functionality. This transition was not perceived as an obstacle. Ahead of the break, we agreed on dates when team members were likely to be unavailable, such as during Christmas and New Year, and planned our work accordingly. This planning helped maintain continuity and avoided unrealistic expectations.
@@ -97,17 +123,17 @@ In retrospect, our early decisions regarding communication, task distribution, a
 
 In this section, discuss:
 
-- what sprints you planned for and what the time plan for the sprints were  
-- how the programming tasks were divided, distributed, carried out, load-balanced, etc. – if you used pair programming how did that go? Did you use it for everything?  
-- what were the actual tasks  
-- did you manage to load-balance the workload so that no one was overwhelmed, how/why not?  
-- were tasks of equal sizes or not, and how you handled if they were not  
-- your thoughts on how does one estimate how much time a task will take  
+- what sprints you planned for and what the time plan for the sprints were
+- how the programming tasks were divided, distributed, carried out, load-balanced, etc. – if you used pair programming how did that go? Did you use it for everything?
+- what were the actual tasks
+- did you manage to load-balance the workload so that no one was overwhelmed, how/why not?
+- were tasks of equal sizes or not, and how you handled if they were not
+- your thoughts on how does one estimate how much time a task will take
 
 Also, visualise:
 
-- how your time planning compared with reality (for example by using a burndown chart for the sprints)  
-- using a pie chart, how the time you spent was distributed across different activities (refer to the main project task description for activities)  
+- how your time planning compared with reality (for example by using a burndown chart for the sprints)
+- using a pie chart, how the time you spent was distributed across different activities (refer to the main project task description for activities)
 
 ---
 
@@ -115,11 +141,11 @@ Also, visualise:
 
 In this section, discuss briefly:
 
-- How confident you are that have actually implemented the right thing (why, how, etc.)  
-- On a scale 1–7 (7 is best), rate your satisfaction with your process and provide justification for that number  
-- On a scale 1–7 (7 is best), rate your satisfaction with your delivered product and provide justification for that number  
-- On a scale 1–7 (7 is best), rate your satisfaction with your quality assurance and provide justification for that number  
-- what does the team consider its biggest win?  
-- what does the team consider its biggest fail?  
+- How confident you are that have actually implemented the right thing (why, how, etc.)
+- On a scale 1–7 (7 is best), rate your satisfaction with your process and provide justification for that number
+- On a scale 1–7 (7 is best), rate your satisfaction with your delivered product and provide justification for that number
+- On a scale 1–7 (7 is best), rate your satisfaction with your quality assurance and provide justification for that number
+- what does the team consider its biggest win?
+- what does the team consider its biggest fail?
 
 ---
