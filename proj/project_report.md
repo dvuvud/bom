@@ -86,12 +86,17 @@ At the start of the project, the team aimed to complete most of the work before 
 
 ## 4 Use of Tools
 
-In this section, discuss:
+In our project, we used several tools to help us stay organized and work together. The main tools were Jira, GitHub, Discord, and VS Code.
 
-- what tools you used in the project
-- what use you had of those tools
-- if there were any tools you were lacking
-- tools you would rather not use in the future
+Jira was used to divide tasks, follow our sprints, and keep track of what was “to do”, “in progress”, and “done”. It worked well for planning, but it was sometimes hard to remember to update it. We also noticed that not everyone was used to Jira, so it took some time to get comfortable with it.
+
+GitHub was the tool that gave structure to the whole project. We created branches so we could work on different parts without affecting the main code. Pull requests helped us see what others were working on, and issues were used when something needed to be fixed or improved. We also did code reviews to make sure the code stayed clean and consistent. Even though some team members were not fully used to GitHub at the start, it became easier over time.
+
+Discord was our main communication tool. We used it for quick questions, planning, and daily updates. It helped us stay connected and solve problems fast.
+
+VS Code was our main tool for writing the code. Everyone used it, and it worked well for the whole project.
+
+Overall, none of the tools were difficult to use. We just needed more practice and routine to feel fully comfortable with them. With more experience, these tools will become even easier to use in future projects.
 
 ---
 
