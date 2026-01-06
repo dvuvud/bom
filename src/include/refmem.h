@@ -78,6 +78,7 @@ size_t rc(obj *p);
  *
  * @note Similar to `calloc`, the allocated memory is zero-initialized.
  * @note Returns `NULL` if memory allocation fails.
+ * @note Returns `NULL` if `bytes` is greater than 2^56 - 1.
  * @note The call the trigger collection of garbage up to the cascade limit.
  * @warning Internal memory leaks can occur if destruction is not handled correctly.
  *
@@ -102,6 +103,7 @@ obj *allocate(size_t bytes, function1_t destructor);
  *
  * @note Similar to `calloc`, memory is zero-initialized.
  * @note Returns `NULL` if memory allocation fails.
+ * @note Returns `NULL` if `bytes` is greater than 2^56 - 1.
  * @par Example:
  * @code
  * // Allocates an array of 10 int pointers with a default destructor

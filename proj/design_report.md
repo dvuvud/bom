@@ -95,7 +95,7 @@ This module provides the public API for memory allocation, reference counting, d
 Each allocation includes a metadata structure containing:
 
 * `refcount` (`uint8_t`) – Number of active references (maximum 255)
-* `size` (`size_t`) – Size of the user object in bytes
+* `size` (`size_t`) – Size of the user object in bytes (56 bits)
 * `destructor` – Optional user-provided cleanup function
 
 #### 4.3.2 Allocation
@@ -286,3 +286,16 @@ We chose this design to keep metadata overhead low and the implementation simple
 **Future Integration**  
 If needed, the counter could be expanded to a larger integer type or made dynamically sized.
 
+## 10.3 Metadata `size` Field Limit
+
+**Deviation**
+The `size` field in the metadata struct is limited to 56 bits rather than 64.
+
+**Behavior**
+If a user attempts to allocate an object whose size exceeds `2^56 − 1`, the allocation request is ignored and the function returns `NULL`.
+
+**Reasoning**
+This design choice improves memory layout by allowing tighter alignment of the metadata structure and preventing the compiler from introducing unused padding. Since metadata is allocated for every object, eliminating dead space reduces overall memory overhead and improves cache efficiency.
+
+**Future Integration**
+Allocations of this magnitude are highly unlikely in practice. However, if support for larger objects becomes necessary, an alternative metadata structure could be introduced to accommodate sizes beyond the 56-bit limit without overflow.

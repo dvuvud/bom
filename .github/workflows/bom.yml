@@ -4,6 +4,10 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "src/**/*.c"
+      - "test/**/*.c"
+      - "demo/**/*.c"
 
 jobs:
   build-and-test:
