@@ -32,15 +32,15 @@ This section summarizes quantitative aspects of the project, including timeline,
 
 The project was carried out over **[3] sprints**:
 
-- **Sprint 1:** [2025-12-12] – [2025-12-23]
-- **Sprint 2:** [2025-12-23] – [2025-01-02]
-- **Sprint 3:** [2025-01-02] – [2025-01-07]
+- **Sprint 1:** 2025-12-12 – 2025-12-23
+- **Sprint 2:** 2025-12-23 – 2025-01-02
+- **Sprint 3:** 2025-01-02 – 2025-01-07
 
 ### Code Metrics
 
-- **Total number of new lines of C code (excluding tests and preexisting code):** [346]
-- **Total number of lines of test code:** [890]
-- **Total number of lines of script code (e.g., Makefiles, Python scripts):** [48]
+- **Total number of new lines of C code (excluding tests and preexisting code):** 346
+- **Total number of lines of test code:** 890
+- **Total number of lines of script code (e.g., Makefiles, Python scripts):** 48
 
 The code metrics were collected using the cloc tool. Blank lines and comments were excluded.
 Only code written during the project period was included in the measurements.
@@ -128,19 +128,43 @@ In retrospect, our early decisions regarding communication, task distribution, a
 
 ## 6 Work Breakdown Structure
 
-In this section, discuss:
+The project was organised using an iterative development process divided into three sprints, each with a clearly defined scope and time frame. The aim of this structure was to allow incremental progress on both the refmem library and its associated deliverables, while maintaining flexibility to adapt to unforeseen challenges.
 
-- what sprints you planned for and what the time plan for the sprints were
-- how the programming tasks were divided, distributed, carried out, load-balanced, etc. – if you used pair programming how did that go? Did you use it for everything?
-- what were the actual tasks
-- did you manage to load-balance the workload so that no one was overwhelmed, how/why not?
-- were tasks of equal sizes or not, and how you handled if they were not
-- your thoughts on how does one estimate how much time a task will take
+### 6.1 Sprint Planning and Time Schedule
 
-Also, visualise:
+In total, three sprints were planned for the project.
+The first sprint ran from **2025-12-12** to **2025-12-23**, with the primary goal of completing the full refmem library, including implementation of all core functionality, unit tests, and documentation.
 
-- how your time planning compared with reality (for example by using a burndown chart for the sprints)
-- using a pie chart, how the time you spent was distributed across different activities (refer to the main project task description for activities)
+The second sprint took place between **2025-12-23** and **2025-01-02**. During this sprint, the focus shifted towards finalising a demonstration of the library through the demo and improving finer details of the implementation, such as increasing test coverage, resolving outstanding issues, and refining documentation.
+
+The final sprint ran from 2025-01-02 to 2025-01-07 and was dedicated entirely to completing all project-related reports, including the project report and supporting quality, test, design, and code review reports.
+
+### 6.2 Task Division and Collaboration
+
+Work throughout the project was divided into pairs, and within each pair tasks were often further split between the two members. This approach allowed for parallel work while still enabling collaboration and discussion when needed. Pair programming was used selectively, mainly when tasks were tightly coupled or required joint design decisions. It was not used for all tasks, as many implementation and writing tasks could be efficiently handled individually within a pair.
+
+One of the main challenges in task distribution was ensuring a fair workload for all participants. Since team members had varying availability due to factors such as exams and other coursework, tasks were adjusted accordingly. Members with more limited availability were given fewer or less demanding tasks, while those with more available time took on larger responsibilities. While this approach worked reasonably well overall, there were periods during the project where the workload was unevenly distributed.
+
+### 6.3 Actual Tasks Per Sprint
+
+During the first sprint, the main tasks involved implementing all functions of the refmem library, along with their corresponding tests and documentation. These tasks were divided by assigning related functionality to the same pair. For example, functions such as `retain`, `release`, `rc` and the reference counting logic were grouped together. This helped maintain consistency in design and implementation across closely related components.
+
+In the second sprint, one pair was assigned responsibility for implementing the entire project demo. This decision was made because the demo code was highly interdependent, making it difficult to split the work cleanly across multiple teams. The remaining pairs focused on writing initial sections of the reports, addressing reported issues, improving code coverage, and performing refinements to the library implementation.
+
+In the final sprint, all report-related tasks were evenly distributed across the pairs. Each pair was responsible for a specific report (such as the code review report, code quality report, test report, or design report), while the main project report was written collaboratively by all project participants.
+
+### 6.4 Load Balancing and Task Size Management
+
+Overall, the team managed to load-balance tasks fairly well. Differences in individual availability were taken into account when assigning tasks, which helped reduce stress and prevent burnout. Those with less available time were given smaller or less time-critical tasks, while others assumed larger responsibilities. Although tasks were not always equal in size, this flexible approach ensured that everyone contributed meaningfully to the project and played an important role in its completion.
+
+### 6.5 Estimating Task Duration
+
+Estimating how long a task will take requires a clear understanding of what is involved in its implementation. From the beginning of the project, this was addressed by first defining detailed documentation and outlining the intended design of the library. By doing so, the team gained a clearer picture of the scope and complexity of each function, which made time estimation more accurate.
+
+In general, this estimation approach worked well. However, the team underestimated the time required to complete the demo, which turned out to be more complex and time-consuming than initially expected. This highlighted the difficulty of estimating tasks that involve integration and presentation rather than isolated functionality.
+
+**Also, visualise:
+how your time planning compared with reality (for example by using a burndown chart for the sprints) using a pie chart, how the time you spent was distributed across different activities (refer to the main project task description for activities)**
 
 ---
 
