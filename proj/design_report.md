@@ -269,6 +269,7 @@ The function `allocate` uses zero-initialized memory through `calloc` instead of
 **Reasoning**  
 During development, we noticed that Valgrind complained about reading uninitialized memory. This happened when the user allocated an object with `allocate`, and by extension `malloc`, and didn't initialize it to anything before it was freed. When the default destructor scans the memory for pointers, it therefore reads uninitialized memory. Setting the memory to zero with `calloc` stops Valgrind from complaining.
 This had other beneficial effects as well. It uncovered a bug to do with misaligned reads that Valgrind had warned about, but that we didn't notice due to assuming the warnings had to do with uninitialized memory.
+
 With non-zeroed memory, the default destructor could accidentally interpret uninitialized garbage values as valid pointers during conservative pointer scanning. The chances of this happening are very low, but with reused memory previously containing pointers, it is a concern.
 
 **Future Integration**  
