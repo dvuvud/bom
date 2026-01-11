@@ -219,7 +219,7 @@ Memory is not freed immediately.
      Invoked during allocation through `allocate` and `allocate_array`.
 3. Objects are processed iteratively in FIFO order.
 4. A global cascade limit restricts how many objects may be freed in a single pass.
-5. `process_pending_frees_byte_limit` also enforces a byte limit, which restricts the total amount of memory that may be freed in one pass.
+5. `process_pending_frees_byte_limit` allows freeing more objects than the global cascade limit would normally allow, as long as the total amount of memory freed is less than requested by the allocation. This helps prevent running out of memory prematurely when there is lots of garbage.
 
 This design avoids recursive deallocation and prevents long or unbounded destructor chains.
 
@@ -248,11 +248,11 @@ After the destructor completes:
 
 ### 7. Cleanup and Shutdown Flow
 
-- `cleanup`
+`cleanup`
 - Processes all pending frees
 - Leaves the system initialized
 
-- `shutdown`
+`shutdown`
 - Clears the pending free queue
 - Destroys the hash set
 - Resets global state
@@ -267,7 +267,9 @@ This section describes the intentional deviations we made from the full project 
 The function `allocate` uses zero-initialized memory through `calloc` instead of uninitialized `malloc`.
 
 **Reasoning**  
-During development, we noticed that zero-initialization made the system more predictable. Without it, the destructor could accidentally interpret uninitialized garbage values as valid pointers during conservative pointer scanning. Using zeroed memory avoided several subtle bugs and made debugging easier.
+During development, we noticed that Valgrind complained about reading uninitialized memory. This happened when the user allocated an object with `allocate`, and by extension `malloc`, and didn't initialize it to anything before it was freed. When the default destructor scans the memory for pointers, it therefore reads uninitialized memory. Setting the memory to zero with `calloc` stops Valgrind from complaining.
+This had other beneficial effects as well. It uncovered a bug to do with misaligned reads that Valgrind had warned about, but that we didn't notice due to assuming the warnings had to do with uninitialized memory.
+With non-zeroed memory, the default destructor could accidentally interpret uninitialized garbage values as valid pointers during conservative pointer scanning. The chances of this happening are very low, but with reused memory previously containing pointers, it is a concern.
 
 **Future Integration**  
 If performance becomes a concern, this behavior could be made configurable so that uninitialized allocations can be used when appropriate.
