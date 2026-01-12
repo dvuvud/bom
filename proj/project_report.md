@@ -170,13 +170,21 @@ how your time planning compared with reality (for example by using a burndown ch
 
 ## 7 Reflection
 
-In this section, discuss briefly:
+As a group, we feel confident that we built the right thing. All tests passed, our coach gave positive feedback, and we asked questions when something was unclear. Some instructions were not very clear, especially about the k‑value and parts of the design, so we were a bit unsure if our solution matched everything exactly. But the system worked as it should.
 
-- How confident you are that have actually implemented the right thing (why, how, etc.)
-- On a scale 1–7 (7 is best), rate your satisfaction with your process and provide justification for that number
-- On a scale 1–7 (7 is best), rate your satisfaction with your delivered product and provide justification for that number
-- On a scale 1–7 (7 is best), rate your satisfaction with your quality assurance and provide justification for that number
-- what does the team consider its biggest win?
-- what does the team consider its biggest fail?
+Work process with average 5.3/7
+Our work process was good and steady. We planned clearly, used Jira to stay organized, and followed up on our tasks. Working remotely also went well, and communication was open. The biggest challenge was dividing the workload fairly, since group members had different levels of experience and different amounts of time during exams and holidays. Even so, we kept a good pace and caught up quickly when deadlines were delayed.
+
+Final product with average 5.8/7
+We are satisfied with the final product. It meets the required functionality and works well. The main thing that could be improved is the k‑value, which was higher than in the reference solution. Since it was not a strict requirement, we did not focus on it as much, but a more optimized design could have improved it.
+
+Quality assurance with average 6.5/7
+Quality assurance is the part we are most proud of. We had good test coverage, clear PR routines, and careful code reviews. Every piece of code was checked by at least two people. This helped us find problems early and deliver a stable system. Our tests cover all important functionality.
+
+Biggest win
+Our biggest win was our structure and teamwork. We planned well from the start, communicated openly, and everyone took responsibility. Even with remote work, holidays, and other courses, we delivered on time with good quality.
+
+Biggest fail
+Our biggest weakness was the k‑value, which we did not manage to optimize. Some instructions were also unclear, which sometimes made us guess and risk doing extra work.
 
 ---
