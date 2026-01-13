@@ -32,6 +32,7 @@ We did all implementation work using feature branches, and pull requests. Before
 was merged into the main branch, it was reviewed by at least one other group member.
 
 Pull requests were used for many different types of implementation and changes, such as:
+
 * adding new functionality (for example allocation, reference counting, and cascading frees)
 * fixing bugs
 * adding or updating tests
@@ -91,6 +92,7 @@ Some common reasons for creating issues were:
 
 We discussed every single issue within the group and then fixed through follow-up pull requests. 
 An issue was only closed after the problem was fixed and checked. 
+
 Using issues together with pull requests helped us keep track of problems, remember review feedback, 
 and make sure that issues were not forgotten. Overall, this made the code review process more 
 structured and efficient.
@@ -102,6 +104,7 @@ structured and efficient.
 Pull requests and code reviews helped us work together. We looked at each other’s code, not only our 
 own part. Sometimes this took extra time, and sometimes it was confusing, but it helped us understand 
 more of the system.
+
 We did not want only one person to know how things worked. By reviewing code, every member of the team
 saw the changes and could ask questions. This made it easier to help each other. It also reduced the 
 chance that someone changed something without the rest of the group noticing. 
