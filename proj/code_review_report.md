@@ -14,113 +14,103 @@
 
 ## 1. Overview
 
-This review examines the reference-counted memory management system as a whole. 
-The primary focus is on structure, readability, correctness, and whether the code 
-fulfills project requirements. Rather than going into every individual function, 
-this review discusses the main design choices and how effectively they work.
+During the project, we tried to keep doing code reviews regularly. We used GitHub pull requests 
+to go through each other’s code and see if the changes made sense and followed the requirements. 
+This helped us understand what others were working on. 
+
+When something did not work as expected, or when we noticed bugs or any strange behavior, or 
+something someone couldn't solve on their own we opened a GitHub issue. Sometimes this happened 
+during reviews, sometimes after testing. Using issues helped us remember what needed to be fixed 
+and made it easier to talk about problems in the group. In general, this way of working helped us 
+keep the project more organized and improved teamwork.
 
 ---
 
-## 2. General Structure
+## 2. Code Review Workflow
 
-The code is organized logically. Each component manages its own responsibility: 
-- refmem handles reference-counted memory, 
-- queue takes care of pending deallocations, 
-- and hashset keeps track of allocated objects. 
+We did all implementation work using feature branches, and pull requests. Before any pull request 
+was merged into the main branch, it was reviewed by at least one other group member.
 
-This separation makes things clear. It can be easily found where to look, 
-whenever we need to test or update something.
+Pull requests were used for many different types of implementation and changes, such as:
+* adding new functionality (for example allocation, reference counting, and cascading frees)
+* fixing bugs
+* adding or updating tests
+* updating documentation and project reports
+* improving code style and consistency
 
----
-
-## 3. Readability
-
-### 3.1 Naming and Style
-
-Most function and variable names are descriptive. When you see a function name, 
-it’s usually clear what it does. The coding style is consistent throughout the 
-files—indentation, use of braces, and control flow all match up, which really 
-helps when reading the code.
+Every pull request was reviewed, and we added comments if something needed to be changed or corrected. 
+If everything looked fine, the pull request was approved and merged.
 
 ---
 
-### 3.2 Comments
+## 3. Examples of Code Review in Practice
 
-Comments appear where they’re needed, mostly explaining why something is done rather
-than restating the code. They’re not excessive, and they help clarify the reasoning 
-behind the implementation.
+In many cases, code reviews led to changes before the code was merged. Some examples of what we 
+reviewed are:
 
----
-
-## 4. Correctness and Memory Safety
-
-### 4.1 Safe Usage
-
-Public functions do a good job of checking for errors—NULL pointers are handled, 
-unmanaged objects are ignored, and the code only frees objects when their reference 
-count reaches zero. These checks keep things reliable and show that memory safety 
-was a priority during development.
-
----
-
-### 4.2 One Notable Issue
-
-One area stands out: 
-- the rc function checks for NULL, but doesn’t verify that the pointer is managed 
-by the system. If someone calls it with an unmanaged pointer, the behavior is 
-undefined. This isn’t a major problem, but it’s inconsistent with the other functions, 
-and could be fixed easily by adding a check.
+* Pull requests related to allocate() and deallocate() were checked carefully to make sure they 
+behaved correctly and matched the existing logic.
+* Changes involving retain(), release(), and rc() were reviewed with focus on reference counting 
+rules and memory safety.
+* Pull requests related to cascading frees and the pending free queue reviewed with extra attention, 
+since these parts affect how the whole system behaves.
+* Some pull requests were about code style, such as fixing indentation, removing tab characters, 
+or making helper functions more consistent.
+* We reviewed also test-related pull requests to check every single functionality were tested 
+and memory leaks found during testing were fixed.
 
 ---
 
-## 5. Edge Cases
+## Review Focus Areas
 
-### 5.1 Allocation Failures
+We mainly focused on:
+* correctness and logic
+* memory safety
+* consistency with reference-counting rules
+* how different modules (refmem, queue, and hashset) interact with each other
+* readability and naming
+* test coverag
 
-Some sections of the code assume malloc or calloc will succeed. If these ever fail, 
-the outcome isn’t always clear. This is rare, but handling these cases would make 
-the system more robust.
-
----
-
-### 5.2 Large Allocations
-
-When allocating large arrays, there’s a chance for integer overflow before size checks
- are performed. This is an uncommon scenario, but addressing it would make the code safer.
+Changes that affected the core memory management logic usually received more detailed reviews.
 
 ---
 
-## 6. Cascade Free Mechanism
+## 4. Issue Tracking
 
-The cascade free feature uses a queue to avoid deep recursion during deallocation. 
-This keeps things manageable and prevents stack overflows. There’s a cascade limit 
-to stop long deallocation chains from blocking everything else. The logic is solid, 
-though a brief comment explaining how the limits interact would help avoid confusion.
+We used GitHub Issues as part of our code review and code quality process. Issues were usually 
+created when problems were found during reviews, testing, or while adding new features.
 
----
+Some common reasons for creating issues were:
+* missing or incorrect behavior, for example when cascading frees did not work as expected
+* memory leaks that were discovered during testing
+* bugs related to the default destructor
+* problems with code style or consistency
+* documentation that was outdated after code changes
 
-## 7. Testing
-
-Testing is a significant strength here. Unit tests cover every function, and 
-integration tests ensure the modules work together. Test coverage is high—most 
-untested areas involve memory allocation failures, which are hard to simulate. 
-The missing coverage is clearly documented in the test report.
-
----
-
-## 8. Overall Evaluation
-
-Overall, the code is well structured, readable, thoroughly tested, and generally 
-safe and correct. The main issues are edge cases that are unlikely to come up in 
-regular use.
+We discussed every single issue within the group and then fixed through follow-up pull requests. 
+An issue was only closed after the problem was fixed and checked. 
+Using issues together with pull requests helped us keep track of problems, remember review feedback, 
+and make sure that issues were not forgotten. Overall, this made the code review process more 
+structured and efficient.
 
 ---
 
-## 9. Conclusion
+## 5. Impact on Collaboration within the team
 
-This code accomplishes its goal—it implements a reference-counted memory management 
-system that meets the requirements. The design is clear, and the system behaves as 
-expected. With a bit more input validation and attention to rare edge cases, 
-it could be even better, but as it is, it’s a solid and well-done project in general.
+Pull requests and code reviews helped us work together. We looked at each other’s code, not only our 
+own part. Sometimes this took extra time, and sometimes it was confusing, but it helped us understand 
+more of the system.
+We did not want only one person to know how things worked. By reviewing code, every member of the team
+saw the changes and could ask questions. This made it easier to help each other. It also reduced the 
+chance that someone changed something without the rest of the group noticing. 
+
+---
+
+## 6. Conclusion
+
+Code reviews were part of how we worked in the project. We used pull requests to look at each other’s 
+code and tests as well. This helped us find problems and talk about changes within the group.
+
+This process helped us avoid bigger mistakes, and finish the project in a better way than if we worked alone.
 
 ---
