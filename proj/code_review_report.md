@@ -64,6 +64,7 @@ and memory leaks found during testing were fixed.
 ## Review Focus Areas
 
 We mainly focused on:
+
 * correctness and logic
 * memory safety
 * consistency with reference-counting rules
@@ -81,6 +82,7 @@ We used GitHub Issues as part of our code review and code quality process. Issue
 created when problems were found during reviews, testing, or while adding new features.
 
 Some common reasons for creating issues were:
+
 * missing or incorrect behavior, for example when cascading frees did not work as expected
 * memory leaks that were discovered during testing
 * bugs related to the default destructor
