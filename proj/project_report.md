@@ -51,8 +51,8 @@ Only code written during the project period was included in the measurements.
 
 ### Repository Activity
 
-- **Total number of git commits:** 186
-- **Total number of pull requests:** 50
+- **Total number of git commits:** 188
+- **Total number of pull requests:** 51
 - **Total number of GitHub issues:** 17
 
 ---

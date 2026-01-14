@@ -94,6 +94,7 @@ char *ask_question_menu()
     }
 
     puts("Invalid option\n\n");
+    deallocate(choice);
     return ask_question_menu();
 }
 
