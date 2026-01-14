@@ -17,7 +17,6 @@ The main design goals of the project are:
 * **Modularity** – Separate functionality into clearly defined components
 
 ## 3. System Overview
-
 The system consists of three core modules:
 
 1. **Hash Set** – Tracks all active allocations
@@ -302,3 +301,17 @@ This design choice improves memory layout by allowing tighter alignment of the m
 
 **Future Integration**
 Allocations of this magnitude are highly unlikely in practice. However, if support for larger objects becomes necessary, an alternative metadata structure could be introduced to accommodate sizes beyond the 56-bit limit without overflow.
+
+# 11.0 The K-Value
+
+Now that the system design, module implementation, execution flow, and general deviations have been detailed, we will conclude by evaluating memory efficiency through the k-value
+
+In our implementation, each allocated object uses 16 bytes of metadata, consisting of 7 bytes for the size field, 1 byte for the reference count, and 8 bytes for the destructor function pointer. Additionally, adding the object to the hash set incurs 16 bytes of extra allocation. For the minimum object size of 8 bytes, this results in a total of 40 bytes allocated per object, giving a theoretical k-value of 5.
+
+It is important to note, however, that the memory overhead in the system is constant per object and independent of the object’s payload size. All metadata and auxiliary structures (including reference count, size field, destructor pointer, and hash set entry) contribute a fixed number of bytes for each allocated object.
+
+As a result, the total overhead scales with the number of objects, not with the total number of allocated payload bytes. Consequently, larger objects amortize this fixed overhead more effectively, leading to a lower k-value as object size increases. Conversely, smaller objects incur proportionally higher overhead, resulting in higher k-values.
+
+Additional memory is also temporarily allocated during object destruction via the cascading free system, as objects are first enqueued before being fully deallocated. This contributes to temporary overhead but does not affect the k-value.
+
+One potential optimization we considered to reduce k is to remove the function pointer from the metadata (since most objects do not use it) and store it separately. Additionally, replacing the hash set with a bytemap would increase static memory allocation at startup but reduce per-object linear allocations, thereby significantly lowering the effective k-value.
