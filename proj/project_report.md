@@ -25,8 +25,8 @@ This section summarizes quantitative aspects of the project, including timeline,
 
 ### Project Timeline
 
-- **Project start date:** [2025-12-03]
-- **Project end date:** [2025-01-07]
+- **Project start date:** 2025-12-03
+- **Project end date:** 2025-01-07
 
 ### Sprints
 
@@ -47,14 +47,13 @@ Only code written during the project period was included in the measurements.
 
 ### Effort
 
-- **Total number of hours worked by the team:** [Number] hours
+- **Total number of hours worked by the team:** 138.18 hours
 
 ### Repository Activity
 
-- **Total number of git commits:** [Number]
-- **Total number of pull requests:** [Number]
-- **Total number of GitHub issues:** [Number]
-
+- **Total number of git commits:** 185
+- **Total number of pull requests:** 50
+- **Total number of GitHub issues:** 17
 
 ---
 
@@ -163,8 +162,15 @@ Estimating how long a task will take requires a clear understanding of what is i
 
 In general, this estimation approach worked well. However, the team underestimated the time required to complete the demo, which turned out to be more complex and time-consuming than initially expected. This highlighted the difficulty of estimating tasks that involve integration and presentation rather than isolated functionality.
 
-**Also, visualise:
-how your time planning compared with reality (for example by using a burndown chart for the sprints) using a pie chart, how the time you spent was distributed across different activities (refer to the main project task description for activities)**
+### 6.6 Burndown and Pie Chart
+
+<img width="836" height="398" alt="image" src="https://github.com/user-attachments/assets/c8e6ce2e-8df4-4548-8d46-31ae335ed5b6" />
+
+The pie chart illustrates the distribution of total time spent across the three main categories of work in the project: **project tasks**, **report tasks**, and **library tasks**.
+
+<img width="601" height="371" alt="image" src="https://github.com/user-attachments/assets/10012aa1-5430-415a-afde-b390ff4e9223" />
+
+The burndown chart demonstrates the progression of remaining tasks over time compared to the planned (estimated) remaining workload at different points throughout the project. Due to most of us not being completely used to working in Jira, we don't have daily task completion data. Therefore, a sprint-level burndown chart was used, showing remaining work at sprint boundaries rather than daily progress.
 
 ---
 
